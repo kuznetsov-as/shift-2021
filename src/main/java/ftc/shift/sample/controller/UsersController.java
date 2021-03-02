@@ -37,7 +37,7 @@ public class UsersController {
      * @param userId - Идентификатор пользователя
      */
     @GetMapping(USERS_PATH + "/{userId}")
-    public UserDtoResponse getUser(@PathVariable Integer userId) {
+    public UserDtoResponse getUser(@PathVariable Long userId) {
         return service.getUser(userId);
     }
 
@@ -50,7 +50,7 @@ public class UsersController {
      * @return Обновленный пользователь
      */
     @PutMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<UserDtoResponse> updateUser(@RequestBody UserDtoRequest user, @PathVariable Integer userId) {
+    public ResponseEntity<UserDtoResponse> updateUser(@RequestBody UserDtoRequest user, @PathVariable Long userId) {
         UserDtoResponse updatedUser = service.updateUser(user, userId);
         return ResponseEntity.ok(updatedUser);
     }
@@ -61,7 +61,7 @@ public class UsersController {
      * @param userId - Идентификатор пользователя, которого необходимо удалить
      */
     @DeleteMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         service.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
