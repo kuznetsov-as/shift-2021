@@ -74,10 +74,8 @@ public class UserService {
      */
     public List<UserDtoResponse> getAllUsers() {
         List<User> userList = userRepository.findAll();
-        List<UserDtoResponse> userDtoResponceList = new ArrayList<UserDtoResponse>();
-        userList.forEach(user -> {
-            userDtoResponceList.add(userMapper.userToDtoResponse(user));
-        });
-        return userDtoResponceList;
+        List<UserDtoResponse> userDtoResponseList = new ArrayList<>();
+        userList.forEach(user -> userDtoResponseList.add(userMapper.userToDtoResponse(user)));
+        return userDtoResponseList;
     }
 }

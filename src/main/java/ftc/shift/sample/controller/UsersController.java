@@ -38,8 +38,7 @@ public class UsersController {
      */
     @GetMapping(USERS_PATH + "/{userId}")
     public UserDtoResponse getUser(@PathVariable Integer userId) {
-        UserDtoResponse user = service.getUser(userId);
-        return user;
+        return service.getUser(userId);
     }
 
     /**

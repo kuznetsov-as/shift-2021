@@ -30,17 +30,17 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public User dtoResponseToUser(UserDtoResponse userDtoResponce) {
-        if ( userDtoResponce == null ) {
+    public User dtoResponseToUser(UserDtoResponse userDtoResponse) {
+        if ( userDtoResponse == null ) {
             return null;
         }
 
         User user = new User();
 
-        user.setId( userDtoResponce.getId() );
-        user.setType( userDtoResponce.getType() );
-        user.setName( userDtoResponce.getName() );
-        user.setRegistrationDate( userDtoResponce.getRegistrationDate() );
+        user.setId( userDtoResponse.getId() );
+        user.setType( userDtoResponse.getType() );
+        user.setName( userDtoResponse.getName() );
+        user.setRegistrationDate( userDtoResponse.getRegistrationDate() );
 
         return user;
     }
