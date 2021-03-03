@@ -194,7 +194,6 @@ public class LicenseService {
     @Getter
     @AllArgsConstructor
     private static class PublicLicence {
-
         @Expose
         private final UUID id;
 

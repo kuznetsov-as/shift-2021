@@ -19,7 +19,13 @@ import java.util.UUID;
 public class Licence {
 
     @Id
-    @Expose
+
+    /*
+     * Сериализатору нужно обязательно говорить учитывать аннотации
+     * Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+     */
+
+    @Expose//Анотация говорит gson сериализовать это поле
     private UUID id;
 
     private String privateKey;
