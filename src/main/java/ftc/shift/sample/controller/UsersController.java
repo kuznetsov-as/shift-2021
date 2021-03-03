@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 public class UsersController {
-    private static final String USERS_PATH = "/api/v001/users";
+    private static final String USERS_PATH = "/users";
     private final UserService service;
 
     @Autowired
