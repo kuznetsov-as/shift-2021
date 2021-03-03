@@ -10,6 +10,7 @@ import ftc.shift.sample.exception.LicenceGeneratorException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -158,10 +159,17 @@ public class LicenceUtil {
             decode.init(Cipher.DECRYPT_MODE, privateKey);
             encode.init(Cipher.ENCRYPT_MODE, publicKey);
 
-            encode.update("Verified".getBytes(StandardCharsets.UTF_8));
+
+            int length = 30;
+            boolean useLetters = true;
+            boolean useNumbers = false;
+            String randomTestString = RandomStringUtils.random(length, useLetters, useNumbers);
+
+
+            encode.update(randomTestString.getBytes(StandardCharsets.UTF_8));
             decode.update(encode.doFinal());
 
-            return "Verified".equals(new String(decode.doFinal(), StandardCharsets.UTF_8));
+            return randomTestString.equals(new String(decode.doFinal(), StandardCharsets.UTF_8));
         } catch (Exception e) {
             throw new LicenceDecodeException(e);
         }
