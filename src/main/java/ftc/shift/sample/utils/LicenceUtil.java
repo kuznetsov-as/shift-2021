@@ -9,6 +9,7 @@ import ftc.shift.sample.exception.LicenceDecodeException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -128,7 +129,11 @@ public class LicenceUtil {
         return new Licence(licenseID,
                 Base64.getEncoder().encodeToString(privateKey.getEncoded()),
                 licenseKey,
-                Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now().plusDays(duration)), userId, "default");
+                Date.valueOf(LocalDate.now()),
+                Date.valueOf(LocalDate.now().plusDays(duration)),
+                userId,
+                "default",
+                null);
     }
 
 
@@ -175,19 +180,40 @@ public class LicenceUtil {
         }
     }
 
+    public static PublicLicence getPublicLicence(Licence licence) {
+        return new PublicLicence(licence.getId(),
+                licence.getLicenseKey(),
+                licence.getCreateDate(),
+                licence.getEndDate(),
+                licence.getType(),
+                licence.getNumberOfLicences());
+    }
+
     @Getter
     @AllArgsConstructor
     public static class PublicLicence {
+        @NonNull
         @Expose
         private final UUID id;
 
+        @NonNull
         @Expose
         private final String licenseKey;
 
+        @NonNull
         @Expose
         private final Date createDate;
 
+        @NonNull
         @Expose
         private final Date endDate;
+
+        @NonNull
+        @Expose
+        private final String type;
+
+        @Expose
+        private final Integer numberOfLicences;
     }
+
 }

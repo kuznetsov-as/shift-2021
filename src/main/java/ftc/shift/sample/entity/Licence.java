@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -28,19 +30,29 @@ public class Licence {
     @Expose//Анотация говорит gson сериализовать это поле
     private UUID id;
 
+    @NonNull
     private String privateKey;
 
+    @NonNull
     @Expose
     private String licenseKey;
 
+    @NonNull
     @Expose
     private Date createDate;
 
+    @NonNull
     @Expose
     private Date endDate;
 
+    @NonNull
     private Long userId;
 
+    @NonNull
     @Expose
     private String type;
+
+    @Nullable
+    @Expose
+    private Integer numberOfLicences;
 }
