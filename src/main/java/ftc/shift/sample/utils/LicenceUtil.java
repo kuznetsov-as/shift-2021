@@ -13,7 +13,9 @@ import lombok.NonNull;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
@@ -30,6 +32,7 @@ public class LicenceUtil {
     private static final String KEY_ALGORITHM = "RSA";
 
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
     private static KeyPairGenerator keyPairGenerator;
     private static Cipher cipher;
 
@@ -86,7 +89,7 @@ public class LicenceUtil {
 
             return keyFactory.generatePublic(spec);
 
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | InvalidKeySpecException e) {
             throw new LicenceDecodeException("Public key decoding err", e);
         }
 
@@ -111,7 +114,7 @@ public class LicenceUtil {
         return Base64.getEncoder().encodeToString(gson.toJson(license).getBytes(StandardCharsets.UTF_8));
     }
 
-    public static Licence generateLicence(Long userId, Long duration) throws LicenceGeneratorException {
+    public static Licence generateLicence(Long userId, Long durationInDay) throws LicenceGeneratorException {
 
         keyPairGenerator.initialize(1024, new SecureRandom());
 
@@ -130,7 +133,7 @@ public class LicenceUtil {
                 Base64.getEncoder().encodeToString(privateKey.getEncoded()),
                 licenseKey,
                 Date.valueOf(LocalDate.now()),
-                Date.valueOf(LocalDate.now().plusDays(duration)),
+                Date.valueOf(LocalDate.now().plusDays(durationInDay)),
                 userId,
                 "default",
                 null);
@@ -166,16 +169,17 @@ public class LicenceUtil {
 
 
             int length = 30;
-            boolean useLetters = true;
-            boolean useNumbers = false;
-            String randomTestString = RandomStringUtils.random(length, useLetters, useNumbers);
-
+            String randomTestString = RandomStringUtils.random(length, true, true);
 
             encode.update(randomTestString.getBytes(StandardCharsets.UTF_8));
             decode.update(encode.doFinal());
 
             return randomTestString.equals(new String(decode.doFinal(), StandardCharsets.UTF_8));
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException |
+                InvalidKeyException |
+                NoSuchPaddingException |
+                BadPaddingException |
+                IllegalBlockSizeException e) {
             throw new LicenceDecodeException(e);
         }
     }
@@ -215,5 +219,4 @@ public class LicenceUtil {
         @Expose
         private final Integer numberOfLicences;
     }
-
 }
