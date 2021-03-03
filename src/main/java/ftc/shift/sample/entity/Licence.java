@@ -18,13 +18,13 @@ import java.util.UUID;
 @Table(name = "licenses")
 public class Licence {
 
-    @Id
 
     /*
      * Сериализатору нужно обязательно говорить учитывать аннотации
      * Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
      */
 
+    @Id
     @Expose//Анотация говорит gson сериализовать это поле
     private UUID id;
 
