@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "licenses")
-public class License {
+public class Licence {
 
     @Id
     @Expose
@@ -33,8 +33,8 @@ public class License {
     @Expose
     private Date endDate;
 
+    private Long userId;
+
     @Expose
     private String type;
-
-    private Long userId;
 }
