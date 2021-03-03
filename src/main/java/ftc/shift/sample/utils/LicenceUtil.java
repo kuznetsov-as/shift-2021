@@ -24,14 +24,17 @@ import java.util.Base64;
 import java.util.UUID;
 
 public class LicenceUtil {
+
+    private static final String KEY_ALGORITHM = "RSA";
+
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private static KeyPairGenerator keyPairGenerator;
     private static Cipher cipher;
 
     static {
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            cipher = Cipher.getInstance("RSA");
+            keyPairGenerator = KeyPairGenerator.getInstance(KEY_ALGORITHM);
+            cipher = Cipher.getInstance(KEY_ALGORITHM);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             e.printStackTrace();
         }
@@ -43,13 +46,15 @@ public class LicenceUtil {
         try {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
+            /*
+             * Весь ключ не влезет по длине поэтому шифруем пополам
+             */
             cipher.update(data, 0, data.length / 2);
-
             var licenseKey1 = cipher.doFinal();
-
 
             cipher.update(data, data.length / 2, data.length / 2);
             var licenseKey2 = cipher.doFinal();
+
             var licenseKey = ArrayUtils.addAll(licenseKey1, licenseKey2);
 
             return Base64.getEncoder().encodeToString(licenseKey);
@@ -64,20 +69,21 @@ public class LicenceUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
             var licenseKey = Base64.getDecoder().decode(encodedKey);
-            cipher.update(licenseKey, 0, licenseKey.length / 2);
 
+            cipher.update(licenseKey, 0, licenseKey.length / 2);
             // Получаем public_key
             byte[] decoded1 = cipher.doFinal();
+
             cipher.update(licenseKey, licenseKey.length / 2, licenseKey.length / 2);
             byte[] decoded2 = cipher.doFinal();
 
             var decoded = ArrayUtils.addAll(decoded1, decoded2);
 
             X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
 
             return keyFactory.generatePublic(spec);
+
         } catch (Exception e) {
             throw new LicenceDecodeException("Public key decoding err", e);
         }
@@ -87,10 +93,12 @@ public class LicenceUtil {
     private static PrivateKey decodePrivateKetFromString(String encodedKey) throws LicenceDecodeException {
         try {
             var decoded = Base64.getDecoder().decode(encodedKey);
+
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
 
             return keyFactory.generatePrivate(spec);
+
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new LicenceDecodeException(e);
         }
@@ -138,14 +146,13 @@ public class LicenceUtil {
     public static boolean isLicenceCorrect(PublicLicence publicLicense, String privateKeyString) throws LicenceDecodeException {
 
         try {
-
             var privateKey = LicenceUtil.decodePrivateKetFromString(privateKeyString);
 
             var publicKey = LicenceUtil.decryptPublicKey(publicLicense.getLicenseKey(), privateKey);
 
             // Шифруем-дешифруем
-            Cipher decode = Cipher.getInstance("RSA");
-            Cipher encode = Cipher.getInstance("RSA");
+            Cipher decode = Cipher.getInstance(KEY_ALGORITHM);
+            Cipher encode = Cipher.getInstance(KEY_ALGORITHM);
 
 
             decode.init(Cipher.DECRYPT_MODE, privateKey);
