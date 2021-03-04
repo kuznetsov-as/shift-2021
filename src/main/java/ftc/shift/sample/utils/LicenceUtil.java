@@ -206,7 +206,7 @@ public class LicenceUtil {
 
         @NonNull
         @Expose
-        private final String licenseKey;
+        private final String licenсeKey;
 
         @NonNull
         @Expose
