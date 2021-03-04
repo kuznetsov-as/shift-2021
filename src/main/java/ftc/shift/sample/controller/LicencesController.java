@@ -2,7 +2,7 @@ package ftc.shift.sample.controller;
 
 import ftc.shift.sample.exception.LicenceCorrectnessException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
-import ftc.shift.sample.service.LicenseService;
+import ftc.shift.sample.service.LicenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +16,10 @@ import java.util.UUID;
 @RestController
 public class LicencesController {
     private static final String LICENCES_PATH = "/licences";
-    private final LicenseService service;
+    private final LicenceService service;
 
     @Autowired
-    public LicencesController(LicenseService service) {
+    public LicencesController(LicenceService service) {
         this.service = service;
     }
 
@@ -31,6 +31,7 @@ public class LicencesController {
      */
     @PostMapping(LICENCES_PATH + "/new")
     public ResponseEntity<String> createLicence(@RequestBody Long id) {
+        System.out.println("Пришли   /new");
         try {
             String result = service.createLicence(id);
             return ResponseEntity.ok(result);

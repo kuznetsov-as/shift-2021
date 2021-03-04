@@ -14,31 +14,31 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class LicenseService {
+public class LicenceService {
 
-    private final LicenceRepository licenseRepository;
+    private final LicenceRepository licenceRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public LicenseService(LicenceRepository licenseRepository, UserRepository userRepository) {
-        this.licenseRepository = licenseRepository;
+    public LicenceService(LicenceRepository licenceRepository, UserRepository userRepository) {
+        this.licenceRepository = licenceRepository;
         this.userRepository = userRepository;
     }
 
     public String createLicence(Long userId, Long duration) throws LicenceGeneratorException {
         Licence licence = LicenceUtil.generateLicence(userId, duration);
-        return LicenceUtil.generateLicenseString(licenseRepository.save(licence));
+        return LicenceUtil.generateLicenseString(licenceRepository.save(licence));
     }
 
     public String createLicence(Long userId) throws LicenceGeneratorException {
         Licence licence = LicenceUtil.generateLicence(userId, 100L);
-        return LicenceUtil.generateLicenseString(licenseRepository.save(licence));
+        return LicenceUtil.generateLicenseString(licenceRepository.save(licence));
     }
 
     public String getLicence(UUID licenceId, Long userId) {
-        if (licenseRepository.getOne(licenceId).getUserId().equals(userId)) {
+        if (licenceRepository.getOne(licenceId).getUserId().equals(userId)) {
             if (userRepository.getOne(userId).getType().equals("company")) {
-                List<Licence> licenceList = licenseRepository.findLicencesByUserId(userId);
+                List<Licence> licenceList = licenceRepository.findLicencesByUserId(userId);
                 return LicenceUtil.generateLicenseString(licenceList.get(licenceList.size() - 1));
             }
             return getLicenseById(licenceId);
@@ -49,7 +49,7 @@ public class LicenseService {
 
     public List<UUID> getAllCompanyLicencesId(Long id) {
         if (userRepository.getOne(id).getType().equals("company")) {
-            List<Licence> licenceList = licenseRepository.findLicencesByUserId(id);
+            List<Licence> licenceList = licenceRepository.findLicencesByUserId(id);
             List<UUID> licenceIdList = new LinkedList<>();
             for (Licence licence : licenceList) {
                 licenceIdList.add(licence.getId());
@@ -64,8 +64,8 @@ public class LicenseService {
         try {
             LicenceUtil.PublicLicence licence = LicenceUtil.getLicenseFromString(licenceString);
 
-            if (licenseRepository.getOne(licence.getId()).getEndDate().before(new Date())) {
-                String privateKey = licenseRepository.getOne(licence.getId()).getPrivateKey();
+            if (licenceRepository.getOne(licence.getId()).getEndDate().before(new Date())) {
+                String privateKey = licenceRepository.getOne(licence.getId()).getPrivateKey();
                 return LicenceUtil.isLicenceCorrect(licence, privateKey);
             } else {
                 throw new LicenceCorrectnessException("LICENSE_EXPIRED");
@@ -76,7 +76,7 @@ public class LicenseService {
     }
 
     public String getLicenseById(UUID uuid) {
-        var licence = licenseRepository.getOne(uuid);
+        var licence = licenceRepository.getOne(uuid);
         return LicenceUtil.generateLicenseString(licence);
     }
 
