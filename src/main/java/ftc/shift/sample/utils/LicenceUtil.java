@@ -114,6 +114,7 @@ public class LicenceUtil {
         return Base64.getEncoder().encodeToString(gson.toJson(license).getBytes(StandardCharsets.UTF_8));
     }
 
+    //Подразумевается что пользователь утилиты должет логировать экспешены
     public static Licence generateLicence(Long userId, Long durationInDay) throws LicenceGeneratorException {
 
         keyPairGenerator.initialize(1024, new SecureRandom());
@@ -141,6 +142,8 @@ public class LicenceUtil {
 
 
     // Этот метод достает из строки лицензии экземпляр лицензии
+    //Подразумевается что пользователь утилиты должет логировать экспешены
+
     public static PublicLicence getLicenseFromString(String licenseString) throws LicenceDecodeException {
         var encodedLicense = new String(Base64.getDecoder().decode(licenseString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 
@@ -152,6 +155,7 @@ public class LicenceUtil {
 
     }
 
+    //Подразумевается что пользователь утилиты должет логировать экспешены
     public static boolean isLicenceCorrect(PublicLicence publicLicense, String privateKeyString) throws LicenceDecodeException {
 
         try {
