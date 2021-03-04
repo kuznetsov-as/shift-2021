@@ -1,9 +1,12 @@
 package ftc.shift.sample.controller;
 
-import ftc.shift.sample.exception.LicenceCorrectnessException;
+import ftc.shift.sample.exception.BadRequestException;
+import ftc.shift.sample.exception.DataNotFoundException;
+import ftc.shift.sample.exception.LicenceException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
 import ftc.shift.sample.service.LicenceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,12 +34,11 @@ public class LicencesController {
      */
     @PostMapping(LICENCES_PATH + "/new")
     public ResponseEntity<String> createLicence(@RequestBody Long id) {
-        System.out.println("Пришли   /new");
         try {
             String result = service.createLicence(id);
             return ResponseEntity.ok(result);
         } catch (LicenceGeneratorException exception) {
-            return ResponseEntity.status(418).body("Не удалось создать лицензию");
+            return ResponseEntity.status(418).body("LICENCE_GENERATION_ERROR");
         }
     }
 
@@ -50,8 +52,14 @@ public class LicencesController {
      */
     @PostMapping(LICENCES_PATH + "/{licenceId}")
     public ResponseEntity<String> getLicence(@PathVariable UUID licenceId, @RequestBody Long id) {
-        String result = service.getLicence(licenceId, id);
-        return ResponseEntity.ok(result);
+        try {
+
+            String result = service.getLicence(licenceId, id);
+            return ResponseEntity.ok(result);
+
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     /**
@@ -61,9 +69,18 @@ public class LicencesController {
      * @return Список всех ID лицензий для полученного id компании
      */
     @PostMapping(LICENCES_PATH + "/list")
-    public ResponseEntity<List<UUID>> getAllCompanyLicencesId(@RequestBody Long id) {
-        List<UUID> result = service.getAllCompanyLicencesId(id);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<?> getAllCompanyLicencesId(@RequestBody Long id) {
+        try {
+
+            List<UUID> result = service.getAllCompanyLicencesId(id);
+            return ResponseEntity.ok(result);
+
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     /**
@@ -75,13 +92,14 @@ public class LicencesController {
      */
     @PostMapping(LICENCES_PATH + "/check")
     public ResponseEntity<String> checkLicence(@RequestBody String licenceString) {
+
         try {
             if (service.isLicenceCorrect(licenceString)) {
-                return ResponseEntity.ok("Лицензия корректна и актуальна");
+                return ResponseEntity.ok("OK");
             } else {
-                throw new LicenceCorrectnessException("Лицензия некорректна");
+                return ResponseEntity.status(418).body("LICENSE_NOT_EXIST");
             }
-        } catch (LicenceCorrectnessException e) {
+        } catch (LicenceException | DataNotFoundException e) {
             return ResponseEntity.status(418).body(e.getMessage());
         }
     }
