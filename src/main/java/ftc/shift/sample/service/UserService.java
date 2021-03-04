@@ -40,6 +40,7 @@ public class UserService {
      * @param userId - Идентификатор пользователя
      */
     public UserDtoResponse getUser(Long userId) {
+        //тут следует использовать findById и orElseTrow
         return userMapper.userToDtoResponse(userRepository.getOne(userId));
     }
 

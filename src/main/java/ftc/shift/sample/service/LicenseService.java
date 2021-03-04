@@ -30,6 +30,7 @@ public class LicenseService {
         try {
             LicenceUtil.PublicLicence licence = LicenceUtil.getLicenseFromString(licenceString);
 
+            //тут следует использовать findById и orElseTrow
             String privateKey = licenseRepository.getOne(licence.getId()).getPrivateKey();
 
             return LicenceUtil.isLicenceCorrect(licence, privateKey);
