@@ -13,7 +13,7 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     User dtoRequestToUser(UserDtoRequest userDtoRequest);
 
-    User dtoResponseToUser(UserDtoResponse userDtoResponce);
+    User dtoResponseToUser(UserDtoResponse userDtoResponse);
 
     UserDtoResponse userToDtoResponse(User user);
 }

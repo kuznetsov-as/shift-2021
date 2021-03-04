@@ -10,7 +10,7 @@ import java.sql.Date;
 @Data
 public class UserDtoResponse {
     @ApiModelProperty(value = "Идентификатор пользователя", example = "1")
-    private int id;
+    private long id;
 
     @ApiModelProperty(value = "Тип пользователя", example = "Физическое лицо")
     private String type;

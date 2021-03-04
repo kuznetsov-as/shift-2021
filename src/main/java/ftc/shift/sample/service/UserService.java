@@ -39,7 +39,8 @@ public class UserService {
      *
      * @param userId - Идентификатор пользователя
      */
-    public UserDtoResponse getUser(Integer userId) {
+    public UserDtoResponse getUser(Long userId) {
+        //тут следует использовать findById и orElseTrow
         return userMapper.userToDtoResponse(userRepository.getOne(userId));
     }
 
@@ -50,7 +51,7 @@ public class UserService {
      * @param updatedUser - Данные для нового пользователя (имя, тип, дата регистрации)
      * @return Обновленный пользователь
      */
-    public UserDtoResponse updateUser(UserDtoRequest updatedUser, Integer userId) {
+    public UserDtoResponse updateUser(UserDtoRequest updatedUser, Long userId) {
         UserDtoResponse user = userMapper.userToDtoResponse(userRepository.findById(userId)
             .orElseThrow(() -> new DataNotFoundException("User not found")));
         user.setName(updatedUser.getName());
@@ -65,7 +66,7 @@ public class UserService {
      *
      * @param userId - Идентификатор пользователя, которого необходимо удалить
      */
-    public void deleteUser(Integer userId) {
+    public void deleteUser(Long userId) {
         userRepository.delete(userRepository.getOne(userId));
     }
 
@@ -74,10 +75,8 @@ public class UserService {
      */
     public List<UserDtoResponse> getAllUsers() {
         List<User> userList = userRepository.findAll();
-        List<UserDtoResponse> userDtoResponceList = new ArrayList<UserDtoResponse>();
-        userList.forEach(user -> {
-            userDtoResponceList.add(userMapper.userToDtoResponse(user));
-        });
-        return userDtoResponceList;
+        List<UserDtoResponse> userDtoResponseList = new ArrayList<>();
+        userList.forEach(user -> userDtoResponseList.add(userMapper.userToDtoResponse(user)));
+        return userDtoResponseList;
     }
 }
