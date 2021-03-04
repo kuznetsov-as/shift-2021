@@ -35,7 +35,7 @@ public class Licence {
 
     @NonNull
     @Expose
-    private String licenseKey;
+    private String licenceKey;
 
     @NonNull
     @Expose

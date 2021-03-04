@@ -190,7 +190,7 @@ public class LicenceUtil {
 
     public static PublicLicence getPublicLicence(Licence licence) {
         return new PublicLicence(licence.getId(),
-                licence.getLicenseKey(),
+                licence.getLicenceKey(),
                 licence.getCreateDate(),
                 licence.getEndDate(),
                 licence.getType(),
