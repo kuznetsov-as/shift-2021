@@ -4,7 +4,7 @@ import ftc.shift.sample.exception.BadRequestException;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.exception.LicenceException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
-import ftc.shift.sample.service.LicenceService;
+import ftc.shift.sample.facade.LicenceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +19,11 @@ import java.util.UUID;
 @RestController
 public class LicencesController {
     private static final String LICENCES_PATH = "/licences";
-    private final LicenceService service;
+    private final LicenceFacade licenceFacade;
 
     @Autowired
-    public LicencesController(LicenceService service) {
-        this.service = service;
+    public LicencesController(LicenceFacade licenceFacade) {
+        this.licenceFacade = licenceFacade;
     }
 
     /**
@@ -35,7 +35,7 @@ public class LicencesController {
     @PostMapping(LICENCES_PATH + "/new")
     public ResponseEntity<String> createLicence(@RequestBody Long id) {
         try {
-            String result = service.createLicence(id);
+            String result = licenceFacade.createLicence(id);
             return ResponseEntity.ok(result);
         } catch (LicenceGeneratorException exception) {
             return ResponseEntity.status(418).body("LICENCE_GENERATION_ERROR");
@@ -53,10 +53,8 @@ public class LicencesController {
     @PostMapping(LICENCES_PATH + "/{licenceId}")
     public ResponseEntity<String> getLicence(@PathVariable UUID licenceId, @RequestBody Long id) {
         try {
-
-            String result = service.getLicence(licenceId, id);
+            String result = licenceFacade.getLicence(licenceId, id);
             return ResponseEntity.ok(result);
-
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -71,16 +69,13 @@ public class LicencesController {
     @PostMapping(LICENCES_PATH + "/list")
     public ResponseEntity<?> getAllCompanyLicencesId(@RequestBody Long id) {
         try {
-
-            List<UUID> result = service.getAllCompanyLicencesId(id);
+            List<UUID> result = licenceFacade.getAllCompanyLicencesId(id);
             return ResponseEntity.ok(result);
-
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (BadRequestException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     /**
@@ -92,9 +87,8 @@ public class LicencesController {
      */
     @PostMapping(LICENCES_PATH + "/check")
     public ResponseEntity<String> checkLicence(@RequestBody String licenceString) {
-
         try {
-            if (service.isLicenceCorrect(licenceString)) {
+            if (licenceFacade.isLicenceCorrect(licenceString)) {
                 return ResponseEntity.ok("OK");
             } else {
                 return ResponseEntity.status(418).body("LICENSE_NOT_EXIST");
