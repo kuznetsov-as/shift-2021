@@ -1,4 +1,4 @@
-package ftc.shift.sample.utils;
+package ftc.shift.sample.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -131,13 +131,13 @@ public class LicenceUtil {
         var licenseKey = encryptPublicKey(publicKey);
 
         return new Licence(licenseID,
-                Base64.getEncoder().encodeToString(privateKey.getEncoded()),
-                licenseKey,
-                Date.valueOf(LocalDate.now()),
-                Date.valueOf(LocalDate.now().plusDays(durationInDay)),
-                userId,
-                "default",
-                null);
+            Base64.getEncoder().encodeToString(privateKey.getEncoded()),
+            licenseKey,
+            Date.valueOf(LocalDate.now()),
+            Date.valueOf(LocalDate.now().plusDays(durationInDay)),
+            userId,
+            "default",
+            null);
     }
 
 
@@ -161,7 +161,7 @@ public class LicenceUtil {
         try {
             var privateKey = LicenceUtil.decodePrivateKetFromString(privateKeyString);
 
-            var publicKey = LicenceUtil.decryptPublicKey(publicLicense.getLicenseKey(), privateKey);
+            var publicKey = LicenceUtil.decryptPublicKey(publicLicense.getLicenceKey(), privateKey);
 
             // Шифруем-дешифруем
             Cipher decode = Cipher.getInstance(KEY_ALGORITHM);
@@ -180,21 +180,21 @@ public class LicenceUtil {
 
             return randomTestString.equals(new String(decode.doFinal(), StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException |
-                InvalidKeyException |
-                NoSuchPaddingException |
-                BadPaddingException |
-                IllegalBlockSizeException e) {
+            InvalidKeyException |
+            NoSuchPaddingException |
+            BadPaddingException |
+            IllegalBlockSizeException e) {
             throw new LicenceDecodeException(e);
         }
     }
 
     public static PublicLicence getPublicLicence(Licence licence) {
         return new PublicLicence(licence.getId(),
-                licence.getLicenceKey(),
-                licence.getCreateDate(),
-                licence.getEndDate(),
-                licence.getType(),
-                licence.getNumberOfLicences());
+            licence.getLicenceKey(),
+            licence.getCreateDate(),
+            licence.getEndDate(),
+            licence.getType(),
+            licence.getNumberOfLicences());
     }
 
     @Getter
@@ -206,7 +206,7 @@ public class LicenceUtil {
 
         @NonNull
         @Expose
-        private final String licenсeKey;
+        private final String licenceKey;
 
         @NonNull
         @Expose

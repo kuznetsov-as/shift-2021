@@ -5,7 +5,7 @@ import ftc.shift.sample.entity.User;
 import ftc.shift.sample.exception.*;
 import ftc.shift.sample.repository.LicenceRepository;
 import ftc.shift.sample.repository.UserRepository;
-import ftc.shift.sample.utils.LicenceUtil;
+import ftc.shift.sample.util.LicenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
