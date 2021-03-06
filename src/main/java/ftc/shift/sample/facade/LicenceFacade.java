@@ -27,14 +27,6 @@ public class LicenceFacade {
         this.userService = userService;
     }
 
-    // Почему два метода, первый где-то понадобится?
-    // Может быть поставим ограничение, что мы не будем создавать лицензию, если пользователь не выбрал срок?
-
-    public String createLicence(Long userId, Long duration) throws LicenceGeneratorException {
-        Licence licence = LicenceUtil.generateLicence(userId, duration);
-        return LicenceUtil.generateLicenseString(licenceService.createLicence(licence));
-    }
-
     public String createLicence(Long userId) throws LicenceGeneratorException {
         Licence licence = LicenceUtil.generateLicence(userId, 100L);
         return LicenceUtil.generateLicenseString(licenceService.createLicence(licence));
@@ -46,7 +38,6 @@ public class LicenceFacade {
         if (Constants.USER_TYPE_COMPANY.equals(user.getType())) {
             return licenceService.getAllCompanyLicencesId(id);
         } else {
-            System.out.println("Is not company");
             throw new BadRequestException("USER_IS_NOT_COMPANY");
         }
     }
