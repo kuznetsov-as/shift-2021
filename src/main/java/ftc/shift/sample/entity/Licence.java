@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "licenses")
+@Table(name = "licences")
 public class Licence {
 
 
@@ -35,7 +35,7 @@ public class Licence {
 
     @NonNull
     @Expose
-    private String licenseKey;
+    private String licenceKey;
 
     @NonNull
     @Expose

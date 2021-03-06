@@ -31,7 +31,7 @@ public class UserService {
      */
     public UserDtoResponse createUser(UserDtoRequest user) {
         return userMapper.userToDtoResponse(
-            userRepository.save(userMapper.dtoRequestToUser(user)));
+                userRepository.save(userMapper.dtoRequestToUser(user)));
     }
 
     /**
@@ -39,21 +39,23 @@ public class UserService {
      *
      * @param userId - Идентификатор пользователя
      */
-    public UserDtoResponse getUser(Long userId) {
-        //тут следует использовать findById и orElseTrow
-        return userMapper.userToDtoResponse(userRepository.getOne(userId));
+    public UserDtoResponse getUser(Long userId) throws DataNotFoundException {
+
+        User user = userRepository.findById(userId).orElseThrow(DataNotFoundException::new);
+
+        return userMapper.userToDtoResponse(user);
     }
 
     /**
      * Добавление нового пользователя
      *
-     * @param userId - Идентификатор пользователя
+     * @param userId      - Идентификатор пользователя
      * @param updatedUser - Данные для нового пользователя (имя, тип, дата регистрации)
      * @return Обновленный пользователь
      */
-    public UserDtoResponse updateUser(UserDtoRequest updatedUser, Long userId) {
+    public UserDtoResponse updateUser(UserDtoRequest updatedUser, Long userId) throws DataNotFoundException {
         UserDtoResponse user = userMapper.userToDtoResponse(userRepository.findById(userId)
-            .orElseThrow(() -> new DataNotFoundException("User not found")));
+                .orElseThrow(() -> new DataNotFoundException("USER_NOT_FOUND")));
         user.setName(updatedUser.getName());
         user.setType(updatedUser.getType());
         user.setRegistrationDate(updatedUser.getRegistrationDate()); // вообще такое не надо изменять. Мб и не давать возможности?

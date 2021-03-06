@@ -19,5 +19,4 @@ public class User extends Identifiable {
     private String type;
     private String name;
     private Date registrationDate;
-
 }

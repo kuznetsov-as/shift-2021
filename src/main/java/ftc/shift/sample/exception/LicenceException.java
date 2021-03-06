@@ -3,8 +3,8 @@ package ftc.shift.sample.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class DataNotFoundException extends Exception {
-    public DataNotFoundException(String message) {
+public class LicenceException extends Exception {
+    public LicenceException(String message) {
         super(message);
     }
 }
