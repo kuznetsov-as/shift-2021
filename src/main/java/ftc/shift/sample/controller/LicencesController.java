@@ -8,7 +8,10 @@ import ftc.shift.sample.facade.LicenceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +33,7 @@ public class LicencesController {
      * @return Сохранённую лицензию
      */
     @PostMapping(LICENCES_PATH + "/new")
-    public ResponseEntity<String> createLicence(@RequestParam Long id) {
+    public ResponseEntity<String> createLicence(@RequestBody Long id) {
         try {
             String result = licenceFacade.createLicence(id);
             return ResponseEntity.ok(result);
