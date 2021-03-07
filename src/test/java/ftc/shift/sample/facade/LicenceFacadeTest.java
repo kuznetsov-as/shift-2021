@@ -29,6 +29,10 @@ import static org.mockito.Mockito.times;
 @ExtendWith(SpringExtension.class)
 class LicenceFacadeTest {
 
+    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
+    private static final String USER_IS_NOT_COMPANY = "USER_IS_NOT_COMPANY";
+    private static final String LICENSE_EXPIRED = "LICENSE_EXPIRED";
+
     @MockBean
     private LicenceService licenceService;
 
@@ -60,7 +64,7 @@ class LicenceFacadeTest {
 
         Exception exception = assertThrows(BadRequestException.class, () ->
                 licenceFacade.getAllCompanyLicencesId(id));
-        assertEquals("USER_IS_NOT_COMPANY", exception.getMessage());
+        assertEquals(USER_IS_NOT_COMPANY, exception.getMessage());
     }
 
     @Test
@@ -88,7 +92,7 @@ class LicenceFacadeTest {
     void isLicenceCorrectIfNotExist() {
         Exception exception = assertThrows(LicenceException.class, () ->
                 licenceFacade.isLicenceCorrect("badLicenceString"));
-        assertEquals("LICENSE_NOT_EXIST", exception.getMessage());
+        assertEquals(LICENCE_NOT_EXIST, exception.getMessage());
     }
 
     @Test
@@ -97,7 +101,7 @@ class LicenceFacadeTest {
         when(licenceService.getLicence(licenceExpired.getId())).thenReturn(licenceExpired);
         Exception exception = assertThrows(LicenceException.class, () ->
                 licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licenceExpired)));
-        assertEquals("LICENSE_EXPIRED", exception.getMessage());
+        assertEquals(LICENSE_EXPIRED, exception.getMessage());
 
         Licence licence = LicenceUtil.generateLicence(1L, 100L);
         when(licenceService.getLicence(licence.getId())).thenReturn(licence);

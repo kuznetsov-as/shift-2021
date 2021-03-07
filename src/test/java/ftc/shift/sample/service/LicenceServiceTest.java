@@ -25,6 +25,8 @@ import static org.mockito.Mockito.times;
 @ExtendWith(SpringExtension.class)
 class LicenceServiceTest {
 
+    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
+
     @MockBean
     private LicenceRepository repository;
 
@@ -59,7 +61,7 @@ class LicenceServiceTest {
     void getLicenceIfNotExist() throws DataNotFoundException {
         Exception exception = assertThrows(DataNotFoundException.class, () ->
                 licenceService.getLicence(null));
-        assertEquals("LICENSE_NOT_EXIST", exception.getMessage());
+        assertEquals(LICENCE_NOT_EXIST, exception.getMessage());
 
         UUID uuid = UUID.randomUUID();
         Licence licence = new Licence();

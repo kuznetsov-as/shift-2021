@@ -30,6 +30,7 @@ class LicencesControllerTest {
     private static final String GET_LICENCE_URL = "/licences/";
     private static final String GET_ALL_COMPANY_LICENCES_ID_URL = "/licences/list";
     private static final String CHECK_LICENCE = "/licences/check";
+    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
 
     @Autowired
     private MockMvc mockMvc;
@@ -119,6 +120,6 @@ class LicencesControllerTest {
                 .content("BAD LICENCE")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(418))
-                .andExpect(content().string("LICENSE_NOT_EXIST"));
+                .andExpect(content().string(LICENCE_NOT_EXIST));
     }
 }
