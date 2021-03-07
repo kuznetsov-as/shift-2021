@@ -15,9 +15,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 class LicenceServiceTest {
@@ -42,8 +45,7 @@ class LicenceServiceTest {
     void getLicenceCompany() {
         List<Licence> licenceList = new LinkedList<>();
 
-        Licence notLastLicence = new Licence();
-        licenceList.add(notLastLicence);
+        licenceList.add(new Licence());
 
         Licence lastLicence = new Licence();
         licenceList.add(lastLicence);
@@ -51,15 +53,24 @@ class LicenceServiceTest {
         when(repository.findLicencesByUserId(1L)).thenReturn(licenceList);
         Licence result = licenceService.getLicenceCompany(1L);
         assertEquals(lastLicence, result);
-        assertNotEquals(notLastLicence, result);
     }
 
     @Test
-    void getLicence() throws DataNotFoundException {
+    void getLicenceIfNotExist() throws DataNotFoundException {
         Exception exception = assertThrows(DataNotFoundException.class, () ->
                 licenceService.getLicence(null));
         assertEquals("LICENSE_NOT_EXIST", exception.getMessage());
 
+        UUID uuid = UUID.randomUUID();
+        Licence licence = new Licence();
+        when(repository.findById(uuid)).thenReturn(java.util.Optional.of(licence));
+
+        Licence result = licenceService.getLicence(uuid);
+        assertEquals(licence, result);
+    }
+
+    @Test
+    void getLicence() throws DataNotFoundException {
         UUID uuid = UUID.randomUUID();
         Licence licence = new Licence();
         when(repository.findById(uuid)).thenReturn(java.util.Optional.of(licence));

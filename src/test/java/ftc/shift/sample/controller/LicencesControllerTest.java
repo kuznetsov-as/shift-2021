@@ -49,7 +49,6 @@ class LicencesControllerTest {
         mockMvc.perform(post(CREATE_LICENCE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(userId))
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(licenceString));
@@ -67,7 +66,6 @@ class LicencesControllerTest {
         mockMvc.perform(post(GET_LICENCE_URL + licenceId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(userId))
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(licenceString));
@@ -87,7 +85,6 @@ class LicencesControllerTest {
         mockMvc.perform(post(GET_ALL_COMPANY_LICENCES_ID_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(String.valueOf(userId))
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
@@ -104,18 +101,24 @@ class LicencesControllerTest {
         mockMvc.perform(post(CHECK_LICENCE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(licenceString)
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("OK"));
+    }
+
+    @Test
+    void checkLicenceIfNotExist() throws Exception {
+        Long userId = 1L;
+        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        String licenceString = LicenceUtil.generateLicenseString(licence);
+
+        when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("BAD LICENCE")
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(418))
                 .andExpect(content().string("LICENSE_NOT_EXIST"));
-
     }
 }

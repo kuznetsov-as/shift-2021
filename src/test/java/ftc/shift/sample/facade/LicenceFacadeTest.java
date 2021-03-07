@@ -2,7 +2,10 @@ package ftc.shift.sample.facade;
 
 import ftc.shift.sample.dto.UserDtoResponse;
 import ftc.shift.sample.entity.Licence;
-import ftc.shift.sample.exception.*;
+import ftc.shift.sample.exception.BadRequestException;
+import ftc.shift.sample.exception.DataNotFoundException;
+import ftc.shift.sample.exception.LicenceException;
+import ftc.shift.sample.exception.LicenceGeneratorException;
 import ftc.shift.sample.service.LicenceService;
 import ftc.shift.sample.service.UserService;
 import ftc.shift.sample.util.Constants;
@@ -15,9 +18,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 class LicenceFacadeTest {
@@ -42,7 +49,7 @@ class LicenceFacadeTest {
     }
 
     @Test
-    void getAllCompanyLicencesId() throws BadRequestException, DataNotFoundException {
+    void getAllUserLicencesId() throws DataNotFoundException {
         Long id = 1L;
 
         UserDtoResponse userDtoResponse = new UserDtoResponse();
@@ -54,8 +61,16 @@ class LicenceFacadeTest {
         Exception exception = assertThrows(BadRequestException.class, () ->
                 licenceFacade.getAllCompanyLicencesId(id));
         assertEquals("USER_IS_NOT_COMPANY", exception.getMessage());
+    }
 
+    @Test
+    void getAllCompanyLicencesId() throws BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        UserDtoResponse userDtoResponse = new UserDtoResponse();
+        userDtoResponse.setId(id);
         userDtoResponse.setType(Constants.USER_TYPE_COMPANY);
+
         when(userService.getUser(id)).thenReturn(userDtoResponse);
 
         licenceFacade.getAllCompanyLicencesId(id);
@@ -67,25 +82,32 @@ class LicenceFacadeTest {
         UUID uuid = UUID.randomUUID();
         licenceFacade.getLicence(uuid);
         verify(licenceService, times(1)).getLicence(uuid);
-
-
     }
 
     @Test
-    void isLicenceCorrect() throws LicenceGeneratorException, DataNotFoundException, LicenceException {
+    void isLicenceCorrectIfNotExist() {
         Exception exception = assertThrows(LicenceException.class, () ->
-                licenceFacade.isLicenceCorrect("licenceString"));
+                licenceFacade.isLicenceCorrect("badLicenceString"));
         assertEquals("LICENSE_NOT_EXIST", exception.getMessage());
+    }
 
+    @Test
+    void isLicenceCorrectIfExpired() throws LicenceGeneratorException, DataNotFoundException, LicenceException {
         Licence licenceExpired = LicenceUtil.generateLicence(1L, 0L);
         when(licenceService.getLicence(licenceExpired.getId())).thenReturn(licenceExpired);
-        exception = assertThrows(LicenceException.class, () ->
+        Exception exception = assertThrows(LicenceException.class, () ->
                 licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licenceExpired)));
         assertEquals("LICENSE_EXPIRED", exception.getMessage());
 
         Licence licence = LicenceUtil.generateLicence(1L, 100L);
         when(licenceService.getLicence(licence.getId())).thenReturn(licence);
         assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence)));
+    }
 
+    @Test
+    void isLicenceCorrect() throws LicenceGeneratorException, DataNotFoundException, LicenceException {
+        Licence licence = LicenceUtil.generateLicence(1L, 100L);
+        when(licenceService.getLicence(licence.getId())).thenReturn(licence);
+        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence)));
     }
 }
