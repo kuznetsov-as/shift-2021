@@ -66,7 +66,7 @@ public class LicenceFacade {
             LicenceUtil.PublicLicence licence = LicenceUtil.getLicenseFromString(licenceString);
             Licence privateLicence = licenceService.getLicence(licence.getId());
 
-            if (Date.valueOf(LocalDate.now()).after(privateLicence.getEndDate())) {
+            if (Date.valueOf(LocalDate.now()).before(privateLicence.getEndDate())) {
                 String privateKey = privateLicence.getPrivateKey();
                 return LicenceUtil.isLicenceCorrect(licence, privateKey);
             } else {
