@@ -1,6 +1,7 @@
 package ftc.shift.sample.facade;
 
 import ftc.shift.sample.dto.UserDtoResponse;
+import ftc.shift.sample.entity.User;
 import ftc.shift.sample.util.Constants;
 import ftc.shift.sample.entity.Licence;
 import ftc.shift.sample.exception.*;
@@ -33,7 +34,7 @@ public class LicenceFacade {
     }
 
     public List<UUID> getAllCompanyLicencesId(Long id) throws DataNotFoundException, BadRequestException {
-        UserDtoResponse user = userService.getUser(id);
+        User user = userService.getUser(id);
 
         if (Constants.USER_TYPE_COMPANY.equals(user.getType())) {
             return licenceService.getAllCompanyLicencesId(id);
@@ -44,7 +45,7 @@ public class LicenceFacade {
 
     public String getLicence(UUID licenceId, Long userId) throws DataNotFoundException {
         Licence licence = licenceService.getLicence(licenceId);
-        UserDtoResponse user = userService.getUser(userId);
+        User user = userService.getUser(userId);
 
         if (licence.getUserId().equals(userId)) {
             if (Constants.USER_TYPE_COMPANY.equals(user.getType())) {

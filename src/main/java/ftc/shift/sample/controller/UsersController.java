@@ -3,6 +3,7 @@ package ftc.shift.sample.controller;
 import ftc.shift.sample.dto.UserDtoRequest;
 import ftc.shift.sample.dto.UserDtoResponse;
 import ftc.shift.sample.exception.DataNotFoundException;
+import ftc.shift.sample.facade.UserFacade;
 import ftc.shift.sample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,11 @@ import java.util.List;
 @RestController
 public class UsersController {
     private static final String USERS_PATH = "/users";
-    private final UserService service;
+    private final UserFacade userFacade;
 
     @Autowired
-    public UsersController(UserService service) {
-        this.service = service;
+    public UsersController(UserFacade userFacade) {
+        this.userFacade = userFacade;
     }
 
     /**
@@ -29,7 +30,7 @@ public class UsersController {
      */
     @PostMapping(USERS_PATH)
     public ResponseEntity<UserDtoResponse> createUser(@RequestBody UserDtoRequest user) {
-        UserDtoResponse result = service.createUser(user);
+        UserDtoResponse result = userFacade.createUser(user);
         return ResponseEntity.ok(result);
     }
 
@@ -41,7 +42,7 @@ public class UsersController {
     @GetMapping(USERS_PATH + "/{userId}")
     public ResponseEntity<?> getUser(@PathVariable Long userId) {
         try {
-            return ResponseEntity.ok(service.getUser(userId));
+            return ResponseEntity.ok(userFacade.getUser(userId));
         } catch (DataNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -56,14 +57,12 @@ public class UsersController {
      */
     @PostMapping(USERS_PATH + "/{userId}")
     public ResponseEntity<?> updateUser(@RequestBody UserDtoRequest user, @PathVariable Long userId) {
-
         try {
-            UserDtoResponse updatedUser = service.updateUser(user, userId);
+            UserDtoResponse updatedUser = userFacade.updateUser(user, userId);
             return ResponseEntity.ok(updatedUser);
         } catch (DataNotFoundException e) {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
     }
 
     /**
@@ -73,7 +72,7 @@ public class UsersController {
      */
     @DeleteMapping(USERS_PATH + "/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        service.deleteUser(userId);
+        userFacade.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
@@ -82,7 +81,7 @@ public class UsersController {
      */
     @GetMapping(USERS_PATH)
     public ResponseEntity<List<UserDtoResponse>> getAllUsers() {
-        List<UserDtoResponse> users = service.getAllUsers();
+        List<UserDtoResponse> users = userFacade.getAllUsers();
         return ResponseEntity.ok(users);
     }
 }
