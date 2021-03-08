@@ -20,6 +20,6 @@ import javax.persistence.MappedSuperclass;
 public abstract class Identifiable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
+    protected Long id;
 }
 

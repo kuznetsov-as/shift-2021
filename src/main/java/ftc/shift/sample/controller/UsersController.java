@@ -2,8 +2,11 @@ package ftc.shift.sample.controller;
 
 import ftc.shift.sample.dto.UserDtoRequest;
 import ftc.shift.sample.dto.UserDtoResponse;
+import ftc.shift.sample.exception.DataNotFoundException;
+import ftc.shift.sample.facade.UserFacade;
 import ftc.shift.sample.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,12 +14,12 @@ import java.util.List;
 
 @RestController
 public class UsersController {
-    private static final String USERS_PATH = "/api/v001/users";
-    private final UserService service;
+    private static final String USERS_PATH = "/users";
+    private final UserFacade userFacade;
 
     @Autowired
-    public UsersController(UserService service) {
-        this.service = service;
+    public UsersController(UserFacade userFacade) {
+        this.userFacade = userFacade;
     }
 
     /**
@@ -27,7 +30,7 @@ public class UsersController {
      */
     @PostMapping(USERS_PATH)
     public ResponseEntity<UserDtoResponse> createUser(@RequestBody UserDtoRequest user) {
-        UserDtoResponse result = service.createUser(user);
+        UserDtoResponse result = userFacade.createUser(user);
         return ResponseEntity.ok(result);
     }
 
@@ -37,23 +40,29 @@ public class UsersController {
      * @param userId - Идентификатор пользователя
      */
     @GetMapping(USERS_PATH + "/{userId}")
-    public UserDtoResponse getUser(@PathVariable Integer userId) {
-        UserDtoResponse user = service.getUser(userId);
-        return user;
+    public ResponseEntity<?> getUser(@PathVariable Long userId) {
+        try {
+            return ResponseEntity.ok(userFacade.getUser(userId));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     /**
      * Обновление существующего пользователя
      *
      * @param userId - Идентификатор пользователя
-     * @param user - Новые данные для пользователя (имя, тип, дата регистрации)
-     *
+     * @param user   - Новые данные для пользователя (имя, тип, дата регистрации)
      * @return Обновленный пользователь
      */
-    @PutMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<UserDtoResponse> updateUser(@RequestBody UserDtoRequest user, @PathVariable Integer userId) {
-        UserDtoResponse updatedUser = service.updateUser(user, userId);
-        return ResponseEntity.ok(updatedUser);
+    @PostMapping(USERS_PATH + "/{userId}")
+    public ResponseEntity<?> updateUser(@RequestBody UserDtoRequest user, @PathVariable Long userId) {
+        try {
+            UserDtoResponse updatedUser = userFacade.updateUser(user, userId);
+            return ResponseEntity.ok(updatedUser);
+        } catch (DataNotFoundException e) {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     /**
@@ -62,8 +71,8 @@ public class UsersController {
      * @param userId - Идентификатор пользователя, которого необходимо удалить
      */
     @DeleteMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
-        service.deleteUser(userId);
+    public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
+        userFacade.deleteUser(userId);
         return ResponseEntity.ok().build();
     }
 
@@ -72,7 +81,7 @@ public class UsersController {
      */
     @GetMapping(USERS_PATH)
     public ResponseEntity<List<UserDtoResponse>> getAllUsers() {
-        List<UserDtoResponse> users = service.getAllUsers();
+        List<UserDtoResponse> users = userFacade.getAllUsers();
         return ResponseEntity.ok(users);
     }
 }
