@@ -14,8 +14,8 @@ import java.sql.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-public class User extends Identifiable {
+@Table(name = "customers")
+public class Customer extends Identifiable {
     private String type;
     private String name;
     private Date registrationDate;

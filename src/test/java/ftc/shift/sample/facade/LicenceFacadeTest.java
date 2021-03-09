@@ -1,14 +1,13 @@
 package ftc.shift.sample.facade;
 
-import ftc.shift.sample.dto.UserDtoResponse;
 import ftc.shift.sample.entity.Licence;
-import ftc.shift.sample.entity.User;
+import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.exception.BadRequestException;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.exception.LicenceException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
 import ftc.shift.sample.service.LicenceService;
-import ftc.shift.sample.service.UserService;
+import ftc.shift.sample.service.CustomerService;
 import ftc.shift.sample.util.Constants;
 import ftc.shift.sample.util.LicenceUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,13 +37,13 @@ class LicenceFacadeTest {
     private LicenceService licenceService;
 
     @MockBean
-    private UserService userService;
+    private CustomerService customerService;
 
     private LicenceFacade licenceFacade;
 
     @BeforeEach
     void setUp() {
-        licenceFacade = new LicenceFacade(licenceService, userService);
+        licenceFacade = new LicenceFacade(licenceService, customerService);
     }
 
     @Test
@@ -57,11 +56,11 @@ class LicenceFacadeTest {
     void getAllUserLicencesId() throws DataNotFoundException {
         Long id = 1L;
 
-        User user = new User();
-        user.setId(id);
-        user.setType(Constants.USER_TYPE_USER);
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(Constants.CUSTOMER_TYPE_USER);
 
-        when(userService.getUser(id)).thenReturn(user);
+        when(customerService.getCustomer(id)).thenReturn(customer);
 
         Exception exception = assertThrows(BadRequestException.class, () ->
                 licenceFacade.getAllCompanyLicencesId(id));
@@ -72,11 +71,11 @@ class LicenceFacadeTest {
     void getAllCompanyLicencesId() throws BadRequestException, DataNotFoundException {
         Long id = 1L;
 
-        User user = new User();
-        user.setId(id);
-        user.setType(Constants.USER_TYPE_COMPANY);
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(Constants.CUSTOMER_TYPE_COMPANY);
 
-        when(userService.getUser(id)).thenReturn(user);
+        when(customerService.getCustomer(id)).thenReturn(customer);
 
         licenceFacade.getAllCompanyLicencesId(id);
         verify(licenceService, times(1)).getAllCompanyLicencesId(id);

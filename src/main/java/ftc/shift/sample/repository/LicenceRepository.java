@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface LicenceRepository extends JpaRepository<Licence, UUID> {
-    List<Licence> findLicencesByUserId(Long companyId);
+    List<Licence> findLicencesByCustomerId(Long customerId);
 }

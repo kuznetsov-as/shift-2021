@@ -2,15 +2,13 @@ package ftc.shift.sample.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Setter;
+import lombok.Getter;
 
 import java.sql.Date;
 
-@Setter
 @Data
-public class UserDtoResponse {
-    @ApiModelProperty(value = "Идентификатор пользователя", example = "1")
-    private long id;
+@Getter
+public class CustomerDtoRequest {
 
     @ApiModelProperty(value = "Тип пользователя", example = "Физическое лицо")
     private String type;
@@ -20,4 +18,5 @@ public class UserDtoResponse {
 
     @ApiModelProperty(value = "Дата регистрации", example = "01.03.2021")
     private Date registrationDate;
+
 }
