@@ -52,7 +52,7 @@ class LicenceServiceTest {
         Licence lastLicence = new Licence();
         licenceList.add(lastLicence);
 
-        when(repository.findLicencesByUserId(1L)).thenReturn(licenceList);
+        when(repository.findLicencesByCustomerId(1L)).thenReturn(licenceList);
         Licence result = licenceService.getLicenceCompany(1L);
         assertEquals(lastLicence, result);
     }
@@ -91,7 +91,7 @@ class LicenceServiceTest {
         licences.add(firstLicence);
         licences.add(secondLicence);
 
-        when(repository.findLicencesByUserId(1L)).thenReturn(licences);
+        when(repository.findLicencesByCustomerId(1L)).thenReturn(licences);
         List<UUID> licenceIdList = licenceService.getAllCompanyLicencesId(1L);
         assertEquals(firstLicence.getId(), licenceIdList.get(0));
         assertEquals(secondLicence.getId(), licenceIdList.get(1));

@@ -1,12 +1,11 @@
 package ftc.shift.sample.facade;
 
-import ftc.shift.sample.dto.UserDtoResponse;
-import ftc.shift.sample.entity.User;
+import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.util.Constants;
 import ftc.shift.sample.entity.Licence;
 import ftc.shift.sample.exception.*;
 import ftc.shift.sample.service.LicenceService;
-import ftc.shift.sample.service.UserService;
+import ftc.shift.sample.service.CustomerService;
 import ftc.shift.sample.util.LicenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,12 @@ import java.util.UUID;
 public class LicenceFacade {
 
     private final LicenceService licenceService;
-    private final UserService userService;
+    private final CustomerService customerService;
 
     @Autowired
-    public LicenceFacade(LicenceService licenceService, UserService userService) {
+    public LicenceFacade(LicenceService licenceService, CustomerService customerService) {
         this.licenceService = licenceService;
-        this.userService = userService;
+        this.customerService = customerService;
     }
 
     public String createLicence(Long userId) throws LicenceGeneratorException {
@@ -34,9 +33,9 @@ public class LicenceFacade {
     }
 
     public List<UUID> getAllCompanyLicencesId(Long id) throws DataNotFoundException, BadRequestException {
-        User user = userService.getUser(id);
+        Customer customer = customerService.getCustomer(id);
 
-        if (Constants.USER_TYPE_COMPANY.equals(user.getType())) {
+        if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
             return licenceService.getAllCompanyLicencesId(id);
         } else {
             throw new BadRequestException("USER_IS_NOT_COMPANY");
@@ -45,10 +44,10 @@ public class LicenceFacade {
 
     public String getLicence(UUID licenceId, Long userId) throws DataNotFoundException {
         Licence licence = licenceService.getLicence(licenceId);
-        User user = userService.getUser(userId);
+        Customer customer = customerService.getCustomer(userId);
 
-        if (licence.getUserId().equals(userId)) {
-            if (Constants.USER_TYPE_COMPANY.equals(user.getType())) {
+        if (licence.getCustomer().getId().equals(userId)) {
+            if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
                 licence = licenceService.getLicenceCompany(userId);
                 return LicenceUtil.generateLicenseString(licence);
             }

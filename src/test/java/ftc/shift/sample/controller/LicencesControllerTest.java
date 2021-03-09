@@ -57,16 +57,16 @@ class LicencesControllerTest {
 
     @Test
     void getLicence() throws Exception {
-        Long userId = 1L;
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        Long id = 1L;
+        Licence licence = LicenceUtil.generateLicence(id, 100L);
         UUID licenceId = licence.getId();
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.getLicence(licenceId, userId)).thenReturn(licenceString);
+        when(licenceFacade.getLicence(licenceId, id)).thenReturn(licenceString);
 
         mockMvc.perform(post(GET_LICENCE_URL + licenceId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(userId))
+                .content(String.valueOf(id))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(licenceString));

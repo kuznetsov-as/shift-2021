@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
+import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.entity.Licence;
 import ftc.shift.sample.exception.LicenceDecodeException;
 import ftc.shift.sample.exception.LicenceGeneratorException;
@@ -130,12 +131,15 @@ public class LicenceUtil {
 
         var licenseKey = encryptPublicKey(publicKey);
 
+        Customer customer = new Customer();
+        customer.setId(userId);
+
         return new Licence(licenseID,
             Base64.getEncoder().encodeToString(privateKey.getEncoded()),
             licenseKey,
             Date.valueOf(LocalDate.now()),
             Date.valueOf(LocalDate.now().plusDays(durationInDay)),
-            userId,
+            customer,
             "default",
             null);
     }
@@ -220,6 +224,6 @@ public class LicenceUtil {
         private final String type;
 
         @Expose
-        private final Integer numberOfLicences;
+        private final Long numberOfLicences;
     }
 }

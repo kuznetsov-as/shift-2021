@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.UUID;
 
@@ -31,10 +29,12 @@ public class Licence {
     private UUID id;
 
     @NonNull
+    @Column(length = 8000)
     private String privateKey;
 
     @NonNull
     @Expose
+    @Column(length = 8000)
     private String licenceKey;
 
     @NonNull
@@ -46,7 +46,9 @@ public class Licence {
     private Date endDate;
 
     @NonNull
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @NonNull
     @Expose
@@ -54,5 +56,5 @@ public class Licence {
 
     @Nullable
     @Expose
-    private Integer numberOfLicences;
+    private Long numberOfLicences;
 }

@@ -2,15 +2,10 @@ package ftc.shift.sample.service;
 
 import ftc.shift.sample.entity.Licence;
 import ftc.shift.sample.exception.DataNotFoundException;
-import ftc.shift.sample.exception.LicenceDecodeException;
-import ftc.shift.sample.exception.LicenceException;
 import ftc.shift.sample.repository.LicenceRepository;
-import ftc.shift.sample.util.LicenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +25,7 @@ public class LicenceService {
     }
 
     public Licence getLicenceCompany(Long companyId) {
-        List<Licence> licenceList = licenceRepository.findLicencesByUserId(companyId);
+        List<Licence> licenceList = licenceRepository.findLicencesByCustomerId(companyId);
         return licenceList.get(licenceList.size() - 1);
     }
 
@@ -39,7 +34,7 @@ public class LicenceService {
     }
 
     public List<UUID> getAllCompanyLicencesId(Long id) {
-        List<Licence> licenceList = licenceRepository.findLicencesByUserId(id);
+        List<Licence> licenceList = licenceRepository.findLicencesByCustomerId(id);
         List<UUID> licenceIdList = new LinkedList<>();
         for (Licence licence : licenceList) {
             licenceIdList.add(licence.getId());
