@@ -35,7 +35,7 @@ public class LicenceService {
     }
 
     public Licence getLicence(UUID licenceId) throws DataNotFoundException {
-        return licenceRepository.findById(licenceId).orElseThrow(() -> new DataNotFoundException("LICENSE_NOT_EXIST"));
+        return licenceRepository.findById(licenceId).orElseThrow(() -> new DataNotFoundException("LICENCE_NOT_EXIST"));
     }
 
     public List<UUID> getAllCompanyLicencesId(Long id) {

@@ -54,7 +54,7 @@ public class LicenceFacade {
             }
             return getLicence(licenceId);
         } else {
-            throw new DataNotFoundException("LICENSE_NOT_EXIST");
+            throw new DataNotFoundException("LICENCE_NOT_EXIST");
         }
     }
 
@@ -71,10 +71,10 @@ public class LicenceFacade {
                 String privateKey = privateLicence.getPrivateKey();
                 return LicenceUtil.isLicenceCorrect(licence, privateKey);
             } else {
-                throw new LicenceException("LICENSE_EXPIRED");
+                throw new LicenceException("LICENCE_EXPIRED");
             }
         } catch (LicenceDecodeException e) {
-            throw new LicenceException("LICENSE_NOT_EXIST");
+            throw new LicenceException("LICENCE_NOT_EXIST");
         }
     }
 }

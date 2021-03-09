@@ -2,6 +2,7 @@ package ftc.shift.sample.facade;
 
 import ftc.shift.sample.dto.UserDtoResponse;
 import ftc.shift.sample.entity.Licence;
+import ftc.shift.sample.entity.User;
 import ftc.shift.sample.exception.BadRequestException;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.exception.LicenceException;
@@ -31,7 +32,7 @@ class LicenceFacadeTest {
 
     private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
     private static final String USER_IS_NOT_COMPANY = "USER_IS_NOT_COMPANY";
-    private static final String LICENSE_EXPIRED = "LICENSE_EXPIRED";
+    private static final String LICENCE_EXPIRED = "LICENCE_EXPIRED";
 
     @MockBean
     private LicenceService licenceService;
@@ -56,11 +57,11 @@ class LicenceFacadeTest {
     void getAllUserLicencesId() throws DataNotFoundException {
         Long id = 1L;
 
-        UserDtoResponse userDtoResponse = new UserDtoResponse();
-        userDtoResponse.setId(id);
-        userDtoResponse.setType(Constants.USER_TYPE_USER);
+        User user = new User();
+        user.setId(id);
+        user.setType(Constants.USER_TYPE_USER);
 
-        when(userService.getUser(id)).thenReturn(userDtoResponse);
+        when(userService.getUser(id)).thenReturn(user);
 
         Exception exception = assertThrows(BadRequestException.class, () ->
                 licenceFacade.getAllCompanyLicencesId(id));
@@ -71,11 +72,11 @@ class LicenceFacadeTest {
     void getAllCompanyLicencesId() throws BadRequestException, DataNotFoundException {
         Long id = 1L;
 
-        UserDtoResponse userDtoResponse = new UserDtoResponse();
-        userDtoResponse.setId(id);
-        userDtoResponse.setType(Constants.USER_TYPE_COMPANY);
+        User user = new User();
+        user.setId(id);
+        user.setType(Constants.USER_TYPE_COMPANY);
 
-        when(userService.getUser(id)).thenReturn(userDtoResponse);
+        when(userService.getUser(id)).thenReturn(user);
 
         licenceFacade.getAllCompanyLicencesId(id);
         verify(licenceService, times(1)).getAllCompanyLicencesId(id);
@@ -101,7 +102,7 @@ class LicenceFacadeTest {
         when(licenceService.getLicence(licenceExpired.getId())).thenReturn(licenceExpired);
         Exception exception = assertThrows(LicenceException.class, () ->
                 licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licenceExpired)));
-        assertEquals(LICENSE_EXPIRED, exception.getMessage());
+        assertEquals(LICENCE_EXPIRED, exception.getMessage());
 
         Licence licence = LicenceUtil.generateLicence(1L, 100L);
         when(licenceService.getLicence(licence.getId())).thenReturn(licence);
