@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
+
 @RestController
 public class LicencesController {
     private static final String LICENCES_PATH = "/licences";
@@ -88,7 +90,7 @@ public class LicencesController {
             if (licenceFacade.isLicenceCorrect(licenceString)) {
                 return ResponseEntity.ok("OK");
             } else {
-                return ResponseEntity.status(418).body("LICENCE_NOT_EXIST");
+                return ResponseEntity.status(418).body(LICENCE_NOT_EXIST);
             }
         } catch (LicenceException | DataNotFoundException e) {
             return ResponseEntity.status(418).body(e.getMessage());

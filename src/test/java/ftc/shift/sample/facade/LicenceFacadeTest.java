@@ -18,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,10 +29,6 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 class LicenceFacadeTest {
-
-    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
-    private static final String USER_IS_NOT_COMPANY = "USER_IS_NOT_COMPANY";
-    private static final String LICENCE_EXPIRED = "LICENCE_EXPIRED";
 
     @MockBean
     private LicenceService licenceService;

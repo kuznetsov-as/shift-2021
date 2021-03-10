@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,8 +25,6 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 class LicenceServiceTest {
-
-    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
 
     @MockBean
     private LicenceRepository repository;

@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
+
 @Service
 public class LicenceService {
 
@@ -30,7 +32,7 @@ public class LicenceService {
     }
 
     public Licence getLicence(UUID licenceId) throws DataNotFoundException {
-        return licenceRepository.findById(licenceId).orElseThrow(() -> new DataNotFoundException("LICENCE_NOT_EXIST"));
+        return licenceRepository.findById(licenceId).orElseThrow(() -> new DataNotFoundException(LICENCE_NOT_EXIST));
     }
 
     public List<UUID> getAllCompanyLicencesId(Long id) {

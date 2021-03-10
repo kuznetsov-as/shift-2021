@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
+import static ftc.shift.sample.util.Constants.USER_IS_NOT_COMPANY;
+
 @Service
 public class LicenceFacade {
 
@@ -38,7 +41,7 @@ public class LicenceFacade {
         if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
             return licenceService.getAllCompanyLicencesId(id);
         } else {
-            throw new BadRequestException("USER_IS_NOT_COMPANY");
+            throw new BadRequestException(USER_IS_NOT_COMPANY);
         }
     }
 
@@ -53,7 +56,7 @@ public class LicenceFacade {
             }
             return getLicence(licenceId);
         } else {
-            throw new DataNotFoundException("LICENCE_NOT_EXIST");
+            throw new DataNotFoundException(LICENCE_NOT_EXIST);
         }
     }
 
@@ -73,7 +76,7 @@ public class LicenceFacade {
                 throw new LicenceException("LICENCE_EXPIRED");
             }
         } catch (LicenceDecodeException e) {
-            throw new LicenceException("LICENCE_NOT_EXIST");
+            throw new LicenceException(LICENCE_NOT_EXIST);
         }
     }
 }
