@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_GENERATION_ERROR;
 import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
 
 @RestController

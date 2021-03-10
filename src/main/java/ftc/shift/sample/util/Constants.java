@@ -8,7 +8,7 @@ public class Constants {
     public static final String LICENCE_TYPE_MULTI = "multi";
 
     public static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
-    public static final String LICENCE_EXPIRED = "LICENSE_EXPIRED";
+    public static final String LICENCE_EXPIRED = "LICENCE_EXPIRED";
     public static final String LICENCE_GENERATION_ERROR = "LICENCE_GENERATION_ERROR";
 
     public static final String USER_IS_NOT_COMPANY = "USER_IS_NOT_COMPANY";
