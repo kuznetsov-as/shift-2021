@@ -39,7 +39,7 @@ public class CustomersController {
      * @param customerId - Идентификатор пользователя
      */
     @GetMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<?> getCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<?> getCustomer(@PathVariable("userId") Long customerId) {
         try {
             return ResponseEntity.ok(customerFacade.getCustomer(customerId));
         } catch (DataNotFoundException e) {
@@ -55,7 +55,7 @@ public class CustomersController {
      * @return Обновленный пользователь
      */
     @PostMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDtoRequest customer, @PathVariable Long customerId) {
+    public ResponseEntity<?> updateCustomer(@RequestBody CustomerDtoRequest customer, @PathVariable("userId") Long customerId) {
         try {
             CustomerDtoResponse updatedUser = customerFacade.updateCustomer(customer, customerId);
             return ResponseEntity.ok(updatedUser);
@@ -70,7 +70,7 @@ public class CustomersController {
      * @param customerId - Идентификатор пользователя, которого необходимо удалить
      */
     @DeleteMapping(USERS_PATH + "/{userId}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<?> deleteCustomer(@PathVariable("userId") Long customerId) {
         customerFacade.deleteCustomer(customerId);
         return ResponseEntity.ok().build();
     }
