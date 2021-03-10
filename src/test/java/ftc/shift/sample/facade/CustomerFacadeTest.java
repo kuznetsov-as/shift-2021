@@ -93,6 +93,6 @@ class CustomerFacadeTest {
 
         when(customerService.getAllCustomers()).thenReturn(customerList);
         List<CustomerDtoResponse> customerDtoResponseList = customerFacade.getAllCustomers();
-        assertEquals(customerDtoResponseList.size(), customerList.size());
+        assertEquals(customerList.size(), customerDtoResponseList.size());
     }
 }

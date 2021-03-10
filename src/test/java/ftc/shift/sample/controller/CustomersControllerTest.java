@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ftc.shift.sample.dto.CustomerDtoRequest;
 import ftc.shift.sample.dto.CustomerDtoResponse;
 import ftc.shift.sample.facade.CustomerFacade;
+import ftc.shift.sample.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,9 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,13 +49,13 @@ class CustomersControllerTest {
     public static void setup() {
         customerDtoRequest = new CustomerDtoRequest();
         customerDtoRequest.setName("Max");
-        customerDtoRequest.setType("company");
+        customerDtoRequest.setType(Constants.CUSTOMER_TYPE_COMPANY);
         customerDtoRequest.setRegistrationDate(Date.valueOf(LocalDate.now()));
 
         customerDtoResponse = new CustomerDtoResponse();
         customerDtoResponse.setId(1L);
         customerDtoResponse.setName("Max");
-        customerDtoResponse.setType("company");
+        customerDtoResponse.setType(Constants.CUSTOMER_TYPE_COMPANY);
         customerDtoResponse.setRegistrationDate(Date.valueOf(LocalDate.now()));
     }
 
@@ -63,7 +66,6 @@ class CustomersControllerTest {
         mockMvc.perform(post(USERS_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerDtoRequest))
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(customerDtoResponse)));
@@ -85,7 +87,6 @@ class CustomersControllerTest {
         mockMvc.perform(post(USERS_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerDtoRequest))
-                .characterEncoding("utf-8")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(customerDtoResponse)));

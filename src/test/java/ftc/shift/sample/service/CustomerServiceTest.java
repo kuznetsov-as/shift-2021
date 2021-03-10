@@ -3,6 +3,7 @@ package ftc.shift.sample.service;
 import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.repository.CustomerRepository;
+import ftc.shift.sample.util.Constants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,10 +52,10 @@ class CustomerServiceTest {
     void updateCustomer() throws DataNotFoundException {
         Date registrationDate = Date.valueOf(LocalDate.now());
 
-        Customer customer = new Customer("company", "Tony", registrationDate);
+        Customer customer = new Customer(Constants.CUSTOMER_TYPE_COMPANY, "Tony", registrationDate);
         customer.setId(1L);
 
-        Customer updatedCustomer = new Customer("person", "Tony", registrationDate);
+        Customer updatedCustomer = new Customer(Constants.CUSTOMER_TYPE_USER, "Tony", registrationDate);
 
         when(repository.findById(customer.getId())).thenReturn(java.util.Optional.of(customer));
         when(repository.save(customer)).thenReturn(updatedCustomer);
@@ -63,7 +64,7 @@ class CustomerServiceTest {
         verify(repository, times(1)).findById(customer.getId());
         verify(repository, times(1)).save(customer);
 
-        assertEquals(result.getType(), updatedCustomer.getType());
+        assertEquals(updatedCustomer, result);
     }
 
     @Test
