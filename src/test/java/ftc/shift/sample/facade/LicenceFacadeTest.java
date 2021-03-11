@@ -44,9 +44,45 @@ class LicenceFacadeTest {
     }
 
     @Test
-    void createLicence() throws LicenceGeneratorException {
-        licenceFacade.createLicence(1L);
+    void createLicenceForUser() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_USER);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createLicence(1L, LICENCE_TYPE_ORDINARY, 1);
         verify(licenceService, times(1)).createLicence(any(Licence.class));
+    }
+
+    @Test
+    void createLicenceForCompany() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_COMPANY);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createLicence(1L, LICENCE_TYPE_ORDINARY, 1);
+        verify(licenceService, times(1)).createLicence(any(Licence.class));
+    }
+
+    @Test
+    void createManyLicencesForCompany() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_COMPANY);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createManyLicences(1L, 5);
+        verify(licenceService, times(5)).createLicence(any(Licence.class));
     }
 
     @Test

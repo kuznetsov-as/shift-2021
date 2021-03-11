@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
-import static ftc.shift.sample.util.Constants.USER_IS_NOT_COMPANY;
+import static ftc.shift.sample.util.Constants.*;
 
 @Service
 public class LicenceFacade {
@@ -30,11 +30,44 @@ public class LicenceFacade {
         this.customerService = customerService;
     }
 
-    public String createLicence(Long userId) throws LicenceGeneratorException {
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+    public String createLicence(Long userId, String type, Integer numberOfProducts) throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Customer customer = customerService.getCustomer(userId);
+        Licence licence;
+
+        if (Constants.CUSTOMER_TYPE_USER.equals(customer.getType()) && LICENCE_TYPE_ORDINARY.equals(type)) {
+            licence = LicenceUtil.generateLicence(userId, 100L);
+            licence.setType(LICENCE_TYPE_ORDINARY);
+            licence.setNumberOfLicences((long) 1);
+
+        } else if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
+            licence = LicenceUtil.generateLicence(userId, 100L);
+            licence.setType(type);
+            licence.setNumberOfLicences((long) (LICENCE_TYPE_MULTI.equals(type) ? numberOfProducts : 1));
+
+        } else {
+            throw new BadRequestException("BAD_REQUEST");
+        }
+
         return LicenceUtil.generateLicenseString(licenceService.createLicence(licence));
     }
 
+    public List<String> createManyLicences(Long userId, Integer count) throws DataNotFoundException, LicenceGeneratorException, BadRequestException {
+        List<String> licences = new ArrayList<>();
+
+        Customer customer = customerService.getCustomer(userId);
+        if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
+            for (int i = 0; i < count; i++) {
+                Licence licence = LicenceUtil.generateLicence(userId, 100L);
+                licence.setType(LICENCE_TYPE_ORDINARY);
+                licence.setNumberOfLicences((long) 1);
+                String licenceString = LicenceUtil.generateLicenseString(licenceService.createLicence(licence));
+                licences.add(licenceString);
+            }
+        } else {
+            throw new BadRequestException("BAD_REQUEST");
+        }
+        return licences;
+    }
     public List<UUID> getAllCompanyLicencesId(Long id) throws DataNotFoundException, BadRequestException {
         Customer customer = customerService.getCustomer(id);
 

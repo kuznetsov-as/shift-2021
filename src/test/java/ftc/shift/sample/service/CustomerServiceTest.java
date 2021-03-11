@@ -1,5 +1,6 @@
 package ftc.shift.sample.service;
 
+import ftc.shift.sample.entity.Contact;
 import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.repository.CustomerRepository;
@@ -12,6 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,11 +54,12 @@ class CustomerServiceTest {
     @Test
     void updateCustomer() throws DataNotFoundException {
         Date registrationDate = Date.valueOf(LocalDate.now());
-
-        Customer customer = new Customer(Constants.CUSTOMER_TYPE_COMPANY, "Tony", registrationDate);
+        List<Contact> contacts = new ArrayList<>();
+        Customer customer = new Customer(Constants.CUSTOMER_TYPE_COMPANY, "Tony", registrationDate, contacts);
         customer.setId(1L);
 
-        Customer updatedCustomer = new Customer(Constants.CUSTOMER_TYPE_USER, "Tony", registrationDate);
+        contacts.add(new Contact("email@gmail.com", customer));
+        Customer updatedCustomer = new Customer(Constants.CUSTOMER_TYPE_USER, "Tony", registrationDate, contacts);
 
         when(repository.findById(customer.getId())).thenReturn(java.util.Optional.of(customer));
         when(repository.save(customer)).thenReturn(updatedCustomer);
