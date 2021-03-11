@@ -9,13 +9,13 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 
 @Component
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = ContactMapper.class)
 public interface CustomerMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(source = "emails", target = "contact")
     Customer dtoRequestToCustomer(CustomerDtoRequest customerDtoRequest);
 
-    Customer dtoResponseToCustomer(CustomerDtoResponse customerDtoResponse);
-
+    @Mapping(source = "contact", target = "emails")
     CustomerDtoResponse customerToDtoResponse(Customer customer);
 }
