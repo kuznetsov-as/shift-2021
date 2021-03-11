@@ -2,9 +2,11 @@ package ftc.shift.sample.facade;
 
 import ftc.shift.sample.dto.CustomerDtoRequest;
 import ftc.shift.sample.dto.CustomerDtoResponse;
+import ftc.shift.sample.entity.Contact;
 import ftc.shift.sample.entity.Customer;
 import ftc.shift.sample.exception.DataNotFoundException;
 import ftc.shift.sample.mapper.CustomerMapper;
+import ftc.shift.sample.service.ContactService;
 import ftc.shift.sample.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,11 +32,14 @@ class CustomerFacadeTest {
     @MockBean
     private CustomerMapper customerMapper;
 
+    @MockBean
+    private ContactService contactService;
+
     private CustomerFacade customerFacade;
 
     @BeforeEach
     void setUp() {
-        customerFacade = new CustomerFacade(customerService, customerMapper);
+        customerFacade = new CustomerFacade(customerService, customerMapper, contactService);
     }
 
     @Test
@@ -55,6 +61,14 @@ class CustomerFacadeTest {
         Customer customer = new Customer();
         customer.setId(1L);
 
+        List<String> contactsString = new ArrayList<>();
+        contactsString.add("email@gmail.com");
+
+        List<Contact> contacts = new ArrayList<>();
+        contacts.add(new Contact("email@gmail.com", customer));
+        customer.setContact(contacts);
+
+        when(contactService.getAllEmails(customer.getId())).thenReturn(contactsString);
         when(customerService.getCustomer(customer.getId())).thenReturn(customer);
 
         customerFacade.getCustomer(customer.getId());
@@ -68,6 +82,14 @@ class CustomerFacadeTest {
         CustomerDtoRequest customerDtoRequest = new CustomerDtoRequest();
         Customer customer = new Customer();
 
+        List<String> contactsString = new ArrayList<>();
+        contactsString.add("email@gmail.com");
+
+        List<Contact> contacts = new ArrayList<>();
+        contacts.add(new Contact("email@gmail.com", customer));
+        customer.setContact(contacts);
+
+        when(contactService.getAllEmails(customer.getId())).thenReturn(contactsString);
         when(customerMapper.dtoRequestToCustomer(customerDtoRequest)).thenReturn(customer);
         when(customerService.updateCustomer(customer, id)).thenReturn(customer);
 

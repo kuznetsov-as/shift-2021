@@ -40,8 +40,10 @@ public class ContactService {
         List<String> emails = new ArrayList<>();
 
         List<Contact> contacts = contactRepository.findAllByCustomerId(customerId);
-        for (Contact contact : contacts) {
-            emails.add(contact.getEmail());
+        if (!contacts.isEmpty()) {
+            for (Contact contact : contacts) {
+                emails.add(contact.getEmail());
+            }
         }
         return emails;
     }
