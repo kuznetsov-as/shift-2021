@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group 'ftc.shift'
+version '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+}
+
