@@ -30,7 +30,7 @@ id bigserial not null
 constraint pk_emails
 primary key,
 email varchar(50) not null,
-customer_id integer not null
+customer_id bigint not null
 constraint fk_43
 references customers
 );
