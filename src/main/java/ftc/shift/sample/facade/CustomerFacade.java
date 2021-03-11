@@ -53,12 +53,17 @@ public class CustomerFacade {
         List<Contact> removedContacts = new ArrayList<>();
 
         for (Contact contact:contacts){
-            if (!contacts.isEmpty() && !customer.getEmails().contains(contact.getEmail())){
+            if (!customer.getEmails().contains(contact.getEmail())){
                 removedContacts.add(contact);
-                contacts.remove(contact);
             }
         }
         contactService.deleteEmails(removedContacts);
+
+        for (Contact contact:contacts){
+            if (removedContacts.contains(contact)){
+                contacts.remove(contact);
+            }
+        }
 
         if (!customer.getEmails().isEmpty()) {
             for (String contact : customer.getEmails()) {

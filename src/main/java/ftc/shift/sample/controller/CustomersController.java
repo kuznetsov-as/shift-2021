@@ -54,7 +54,7 @@ public class CustomersController {
      * @param customer   - Новые данные для пользователя (имя, тип, дата регистрации)
      * @return Обновленный пользователь
      */
-    @PostMapping(USERS_PATH + "/{customerId}")
+    @PutMapping(USERS_PATH + "/{customerId}")
     public ResponseEntity<?> updateCustomer(@RequestBody CustomerDtoRequest customer, @PathVariable Long customerId) {
         try {
             CustomerDtoResponse updatedUser = customerFacade.updateCustomer(customer, customerId);

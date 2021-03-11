@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 public interface CustomerMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "emails", target = "contact")
     Customer dtoRequestToCustomer(CustomerDtoRequest customerDtoRequest);
 
     @Mapping(source = "contact", target = "emails")
