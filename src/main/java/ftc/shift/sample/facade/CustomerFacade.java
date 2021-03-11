@@ -59,11 +59,7 @@ public class CustomerFacade {
         }
         contactService.deleteEmails(removedContacts);
 
-        for (Contact contact:contacts){
-            if (removedContacts.contains(contact)){
-                contacts.remove(contact);
-            }
-        }
+        contacts.removeAll(removedContacts);
 
         if (!customer.getEmails().isEmpty()) {
             for (String contact : customer.getEmails()) {
@@ -74,10 +70,13 @@ public class CustomerFacade {
         }
         contactService.saveContacts(contacts);
 
+        updatedCustomer.setContact(contacts);
+
         return customerMapper.customerToDtoResponse(updatedCustomer);
     }
 
     public void deleteCustomer(Long customerId) {
+        contactService.deleteEmails(contactService.getAllContacts(customerId));
         customerService.deleteCustomer(customerId);
     }
 
