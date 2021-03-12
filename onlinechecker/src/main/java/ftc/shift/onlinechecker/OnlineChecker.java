@@ -16,6 +16,7 @@ public class OnlineChecker {
                                              @NonNull String productVersion)
             throws IOException, InterruptedException, LicenceException {
 
+
         HttpClient httpClient = HttpClient.newHttpClient();
 
         var uri = String.format(url + "/licences/check?productType=%s&productVersion=%s", productType, productVersion);
