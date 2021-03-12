@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_NOT_EXIST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,8 +25,6 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(SpringExtension.class)
 class LicenceServiceTest {
-
-    private static final String LICENCE_NOT_EXIST = "LICENCE_NOT_EXIST";
 
     @MockBean
     private LicenceRepository repository;
@@ -52,7 +51,7 @@ class LicenceServiceTest {
         Licence lastLicence = new Licence();
         licenceList.add(lastLicence);
 
-        when(repository.findLicencesByUserId(1L)).thenReturn(licenceList);
+        when(repository.findLicencesByCustomerId(1L)).thenReturn(licenceList);
         Licence result = licenceService.getLicenceCompany(1L);
         assertEquals(lastLicence, result);
     }
@@ -85,13 +84,13 @@ class LicenceServiceTest {
     void getAllCompanyLicencesId() throws LicenceGeneratorException {
         List<Licence> licences = new LinkedList<>();
 
-        Licence firstLicence = LicenceUtil.generateLicence(1L, 100L);
-        Licence secondLicence = LicenceUtil.generateLicence(1L, 100L);
+        Licence firstLicence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
+        Licence secondLicence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
 
         licences.add(firstLicence);
         licences.add(secondLicence);
 
-        when(repository.findLicencesByUserId(1L)).thenReturn(licences);
+        when(repository.findLicencesByCustomerId(1L)).thenReturn(licences);
         List<UUID> licenceIdList = licenceService.getAllCompanyLicencesId(1L);
         assertEquals(firstLicence.getId(), licenceIdList.get(0));
         assertEquals(secondLicence.getId(), licenceIdList.get(1));
