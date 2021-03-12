@@ -71,7 +71,7 @@ class LicencesControllerTest {
     @Test
     void getLicence() throws Exception {
         Long id = 1L;
-        Licence licence = LicenceUtil.generateLicence(id, 100L);
+        Licence licence = LicenceUtil.generateLicence(id, 100L, "1", "1");
         UUID licenceId = licence.getId();
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
@@ -107,10 +107,10 @@ class LicencesControllerTest {
     @Test
     void checkLicence() throws Exception {
         Long userId = 1L;
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        Licence licence = LicenceUtil.generateLicence(userId, 100L, "1", "1");
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
+        when(licenceFacade.isLicenceCorrect(licenceString, "1", "1")).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,10 +125,10 @@ class LicencesControllerTest {
     @Test
     void checkLicenceIfNotExist() throws Exception {
         Long userId = 1L;
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        Licence licence = LicenceUtil.generateLicence(userId, 100L, "1", "1");
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
+        when(licenceFacade.isLicenceCorrect(licenceString, "1", "1")).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
                 .contentType(MediaType.APPLICATION_JSON)

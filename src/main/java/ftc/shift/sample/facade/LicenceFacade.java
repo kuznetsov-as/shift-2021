@@ -97,10 +97,18 @@ public class LicenceFacade {
         return LicenceUtil.generateLicenseString(licenceService.getLicence(licenceId));
     }
 
-    public boolean isLicenceCorrect(String licenceString) throws LicenceException, DataNotFoundException {
+    public boolean isLicenceCorrect(String licenceString, String productType, String productVersion) throws LicenceException, DataNotFoundException {
         try {
             LicenceUtil.PublicLicence licence = LicenceUtil.getLicenseFromString(licenceString);
             Licence privateLicence = licenceService.getLicence(licence.getId());
+
+            if (!licence.getProductType().equals(productType)) {
+                throw new LicenceException(PRODUCT_TYPE_DOESNT_MATCH);
+            }
+
+            if (!licence.getProductVersion().equals(productVersion)) {
+                throw new LicenceException(PRODUCT_VERSION_DOESNT_MATCH);
+            }
 
             if (Date.valueOf(LocalDate.now()).before(privateLicence.getEndDate())) {
                 String privateKey = privateLicence.getPrivateKey();

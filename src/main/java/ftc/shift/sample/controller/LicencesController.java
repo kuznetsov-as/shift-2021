@@ -101,9 +101,11 @@ public class LicencesController {
      * иначе код 418 с типом ошибки в теле ответа: LICENSE_NOT_EXIST, LICENSE_EXPIRED
      */
     @PostMapping(LICENCES_PATH + "/check")
-    public ResponseEntity<String> checkLicence(@RequestBody String licenceString) {
+    public ResponseEntity<String> checkLicence(@RequestBody String licenceString,
+                                               @RequestParam String productType,
+                                               @RequestParam String productVersion) {
         try {
-            if (licenceFacade.isLicenceCorrect(licenceString)) {
+            if (licenceFacade.isLicenceCorrect(licenceString, productType, productVersion)) {
                 return ResponseEntity.ok("OK");
             } else {
                 return ResponseEntity.status(418).body(LICENCE_NOT_EXIST);

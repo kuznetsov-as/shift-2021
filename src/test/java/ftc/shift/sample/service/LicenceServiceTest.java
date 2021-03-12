@@ -84,8 +84,8 @@ class LicenceServiceTest {
     void getAllCompanyLicencesId() throws LicenceGeneratorException {
         List<Licence> licences = new LinkedList<>();
 
-        Licence firstLicence = LicenceUtil.generateLicence(1L, 100L);
-        Licence secondLicence = LicenceUtil.generateLicence(1L, 100L);
+        Licence firstLicence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
+        Licence secondLicence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
 
         licences.add(firstLicence);
         licences.add(secondLicence);
