@@ -3,8 +3,8 @@ package ftc.shift.sample.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class BadRequestException extends Exception {
-    public BadRequestException(String message) {
+public class LicenceException extends Exception {
+    public LicenceException(String message) {
         super(message);
     }
 }

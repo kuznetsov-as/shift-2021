@@ -4,20 +4,20 @@ import com.google.gson.annotations.Expose;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.UUID;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "licenses")
+@Table(name = "licences")
 public class Licence {
 
 
@@ -31,11 +31,13 @@ public class Licence {
     private UUID id;
 
     @NonNull
+    @Column(length = 8000)
     private String privateKey;
 
     @NonNull
     @Expose
-    private String licenseKey;
+    @Column(length = 8000)
+    private String licenceKey;
 
     @NonNull
     @Expose
@@ -46,7 +48,9 @@ public class Licence {
     private Date endDate;
 
     @NonNull
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @NonNull
     @Expose
@@ -54,5 +58,5 @@ public class Licence {
 
     @Nullable
     @Expose
-    private Integer numberOfLicences;
+    private Long numberOfLicences;
 }
