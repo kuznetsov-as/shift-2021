@@ -11,6 +11,7 @@ import java.net.http.HttpResponse;
 public class OnlineChecker {
     public static boolean isLicenceAvailable(String url, String licence) throws IOException, InterruptedException, LicenceException {
         HttpClient httpClient = HttpClient.newHttpClient();
+        // TODO: 12.03.2021 адаптировать под версионность, жду последню версию 
         HttpRequest httpRequest = HttpRequest.newBuilder(URI.create(url + "/licences/check"))
                 .header("Content-Type", "text/plain")
                 .POST(HttpRequest.BodyPublishers.ofString(licence))
