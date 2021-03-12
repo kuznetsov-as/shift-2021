@@ -56,16 +56,16 @@ class LicencesControllerTest {
         when(licenceFacade.createLicence(id, type, 1, "1", "1")).thenReturn(licenceString);
 
         mockMvc.perform(post(CREATE_LICENCE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(id))
-            .param("type", type)
-            .param("numberOfProducts", String.valueOf(1))
-            .param("count", String.valueOf(0))
-            .param("productType", "1")
-            .param("productVersion", "1")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(licenceString));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(id))
+                .param("type", type)
+                .param("numberOfProducts", String.valueOf(1))
+                .param("count", String.valueOf(0))
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(licenceString));
     }
 
     @Test
@@ -78,11 +78,11 @@ class LicencesControllerTest {
         when(licenceFacade.getLicence(licenceId, id)).thenReturn(licenceString);
 
         mockMvc.perform(post(GET_LICENCE_URL + licenceId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(id))
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(licenceString));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(id))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(licenceString));
     }
 
     @Test
@@ -97,11 +97,11 @@ class LicencesControllerTest {
         when(licenceFacade.getAllCompanyLicencesId(userId)).thenReturn(uuidList);
 
         mockMvc.perform(post(GET_ALL_COMPANY_LICENCES_ID_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(userId))
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(userId))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
     }
 
     @Test
@@ -113,13 +113,13 @@ class LicencesControllerTest {
         when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(licenceString)
-            .param("productType", "1")
-            .param("productVersion", "1")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string("OK"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(licenceString)
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("OK"));
     }
 
     @Test
@@ -131,12 +131,12 @@ class LicencesControllerTest {
         when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("BAD LICENCE")
-            .param("productType", "1")
-            .param("productVersion", "1")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is(418))
-            .andExpect(content().string(LICENCE_NOT_EXIST));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("BAD LICENCE")
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(418))
+                .andExpect(content().string(LICENCE_NOT_EXIST));
     }
 }
