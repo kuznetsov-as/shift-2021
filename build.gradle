@@ -51,6 +51,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
     implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    // https://mvnrepository.com/artifact/org.reflections/reflections
+    implementation (group: 'org.reflections', name: 'reflections', version: '0.9.12'){
+        exclude group: 'javax.servlet'
+    }
     compile group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.3'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.12'

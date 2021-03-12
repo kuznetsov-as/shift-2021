@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.List;
 
 @Setter
 @Data
@@ -20,4 +21,7 @@ public class CustomerDtoResponse {
 
     @ApiModelProperty(value = "Дата регистрации", example = "01.03.2021")
     private Date registrationDate;
+
+    @ApiModelProperty(value = "Emails", example = "i.ivanov@gmail.com")
+    private List<String> emails;
 }

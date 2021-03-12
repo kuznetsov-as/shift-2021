@@ -116,7 +116,7 @@ public class LicenceUtil {
     }
 
     //Подразумевается что пользователь утилиты должет логировать экспешены
-    public static Licence generateLicence(Long userId, Long durationInDay) throws LicenceGeneratorException {
+    public static Licence generateLicence(Long userId, Long durationInDay, String productType, String productVersion) throws LicenceGeneratorException {
 
         keyPairGenerator.initialize(1024, new SecureRandom());
 
@@ -135,13 +135,15 @@ public class LicenceUtil {
         customer.setId(userId);
 
         return new Licence(licenseID,
-            Base64.getEncoder().encodeToString(privateKey.getEncoded()),
-            licenseKey,
-            Date.valueOf(LocalDate.now()),
-            Date.valueOf(LocalDate.now().plusDays(durationInDay)),
-            customer,
-            "default",
-            null);
+                Base64.getEncoder().encodeToString(privateKey.getEncoded()),
+                licenseKey,
+                Date.valueOf(LocalDate.now()),
+                Date.valueOf(LocalDate.now().plusDays(durationInDay)),
+                customer,
+                "default",
+                null,
+                productType,
+                productVersion);
     }
 
 
@@ -183,21 +185,23 @@ public class LicenceUtil {
 
             return randomTestString.equals(new String(decode.doFinal(), StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException |
-            InvalidKeyException |
-            NoSuchPaddingException |
-            BadPaddingException |
-            IllegalBlockSizeException e) {
+                InvalidKeyException |
+                NoSuchPaddingException |
+                BadPaddingException |
+                IllegalBlockSizeException e) {
             throw new LicenceDecodeException(e);
         }
     }
 
     public static PublicLicence getPublicLicence(Licence licence) {
         return new PublicLicence(licence.getId(),
-            licence.getLicenceKey(),
-            licence.getCreateDate(),
-            licence.getEndDate(),
-            licence.getType(),
-            licence.getNumberOfLicences());
+                licence.getLicenceKey(),
+                licence.getCreateDate(),
+                licence.getEndDate(),
+                licence.getType(),
+                licence.getNumberOfLicences(),
+                licence.getProductType(),
+                licence.getProductVersion());
     }
 
     @Getter
@@ -225,5 +229,13 @@ public class LicenceUtil {
 
         @Expose
         private final Long numberOfLicences;
+
+        @Expose
+        @NonNull
+        private final String productType;
+
+        @Expose
+        @NonNull
+        private final String productVersion;
     }
 }

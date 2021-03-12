@@ -29,18 +29,33 @@ public class LicencesController {
     /**
      * Добавление новой лицензии
      *
-     * @param id - id пользователя или компании, для новой лицензии
+     * @param id               - id пользователя или компании, для новой лицензии
+     * @param type             - тип создаваемой лицензии
+     * @param numberOfProducts - количество продуктов покрываемых мультилицензией
+     * @param count            - количесвто создаваемых лицензий
      * @return Сохранённую лицензию
      */
     @PostMapping(LICENCES_PATH + "/new")
-    public ResponseEntity<String> createLicence(@RequestBody Long id) {
+    public ResponseEntity<?> createLicence(@RequestBody Long id,
+                                           @RequestParam String type,
+                                           @RequestParam Integer numberOfProducts,
+                                           @RequestParam Integer count,
+                                           @RequestParam String productType,
+                                           @RequestParam String productVersion) {
         try {
-            String result = licenceFacade.createLicence(id);
-            return ResponseEntity.ok(result);
-        } catch (LicenceGeneratorException exception) {
-            return ResponseEntity.status(418).body("LICENCE_GENERATION_ERROR");
+            if (count > 1) {
+                List<String> result = licenceFacade.createManyLicences(id, count, productType, productVersion);
+                return ResponseEntity.ok(result);
+            } else {
+                String result = licenceFacade.createLicence(id, type, numberOfProducts, productType, productVersion);
+                return ResponseEntity.ok(result);
+            }
+            } catch (LicenceGeneratorException exception) {
+                return ResponseEntity.status(418).body(LICENCE_GENERATION_ERROR);
+            } catch (BadRequestException | DataNotFoundException exception) {
+                return ResponseEntity.badRequest().body(exception.getMessage());
+            }
         }
-    }
 
     /**
      * Получение существующей лицензии
@@ -86,9 +101,11 @@ public class LicencesController {
      * иначе код 418 с типом ошибки в теле ответа: LICENSE_NOT_EXIST, LICENSE_EXPIRED
      */
     @PostMapping(LICENCES_PATH + "/check")
-    public ResponseEntity<String> checkLicence(@RequestBody String licenceString) {
+    public ResponseEntity<String> checkLicence(@RequestBody String licenceString,
+                                               @RequestParam String productType,
+                                               @RequestParam String productVersion) {
         try {
-            if (licenceFacade.isLicenceCorrect(licenceString)) {
+            if (licenceFacade.isLicenceCorrect(licenceString, productType, productVersion)) {
                 return ResponseEntity.ok("OK");
             } else {
                 return ResponseEntity.status(418).body(LICENCE_NOT_EXIST);

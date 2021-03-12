@@ -44,9 +44,45 @@ class LicenceFacadeTest {
     }
 
     @Test
-    void createLicence() throws LicenceGeneratorException {
-        licenceFacade.createLicence(1L);
+    void createLicenceForUser() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_USER);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createLicence(1L, LICENCE_TYPE_ORDINARY, 1, "1", "1");
         verify(licenceService, times(1)).createLicence(any(Licence.class));
+    }
+
+    @Test
+    void createLicenceForCompany() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_COMPANY);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createLicence(1L, LICENCE_TYPE_ORDINARY, 1, "1", "1");
+        verify(licenceService, times(1)).createLicence(any(Licence.class));
+    }
+
+    @Test
+    void createManyLicencesForCompany() throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+        Long id = 1L;
+
+        Customer customer = new Customer();
+        customer.setId(id);
+        customer.setType(CUSTOMER_TYPE_COMPANY);
+
+        when(customerService.getCustomer(id)).thenReturn(customer);
+
+        licenceFacade.createManyLicences(1L, 5, "1", "1");
+        verify(licenceService, times(5)).createLicence(any(Licence.class));
     }
 
     @Test
@@ -88,27 +124,47 @@ class LicenceFacadeTest {
     @Test
     void isLicenceCorrectIfNotExist() {
         Exception exception = assertThrows(LicenceException.class, () ->
-                licenceFacade.isLicenceCorrect("badLicenceString"));
+                licenceFacade.isLicenceCorrect("badLicenceString", "1", "1"));
         assertEquals(LICENCE_NOT_EXIST, exception.getMessage());
     }
 
     @Test
     void isLicenceCorrectIfExpired() throws LicenceGeneratorException, DataNotFoundException, LicenceException {
-        Licence licenceExpired = LicenceUtil.generateLicence(1L, 0L);
+        Licence licenceExpired = LicenceUtil.generateLicence(1L, 0L, "1", "1");
         when(licenceService.getLicence(licenceExpired.getId())).thenReturn(licenceExpired);
         Exception exception = assertThrows(LicenceException.class, () ->
-                licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licenceExpired)));
+                licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licenceExpired), "1", "1"));
         assertEquals(LICENCE_EXPIRED, exception.getMessage());
 
-        Licence licence = LicenceUtil.generateLicence(1L, 100L);
+        Licence licence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
         when(licenceService.getLicence(licence.getId())).thenReturn(licence);
-        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence)));
+        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "1", "1"));
     }
 
     @Test
     void isLicenceCorrect() throws LicenceGeneratorException, DataNotFoundException, LicenceException {
-        Licence licence = LicenceUtil.generateLicence(1L, 100L);
+        Licence licence = LicenceUtil.generateLicence(1L, 100L, "1", "1");
         when(licenceService.getLicence(licence.getId())).thenReturn(licence);
-        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence)));
+        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "1", "1"));
+    }
+
+    @Test
+    void isLicenceCorrectIfTypeMismatch() throws DataNotFoundException, LicenceGeneratorException, LicenceException {
+        Licence licence = LicenceUtil.generateLicence(1L, 100L, "t1", "v1");
+        when(licenceService.getLicence(licence.getId())).thenReturn(licence);
+        Exception exception = assertThrows(LicenceException.class, () ->
+                licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "t2", "v1"));
+        assertEquals(PRODUCT_TYPE_DOESNT_MATCH, exception.getMessage());
+        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "t1", "v1"));
+    }
+
+    @Test
+    void isLicenceCorrectIfVersionMismatch() throws DataNotFoundException, LicenceGeneratorException, LicenceException {
+        Licence licence = LicenceUtil.generateLicence(1L, 100L, "t1", "v1");
+        when(licenceService.getLicence(licence.getId())).thenReturn(licence);
+        Exception exception = assertThrows(LicenceException.class, () ->
+                licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "t1", "v2"));
+        assertEquals(PRODUCT_VERSION_DOESNT_MATCH, exception.getMessage());
+        assertTrue(licenceFacade.isLicenceCorrect(LicenceUtil.generateLicenseString(licence), "t1", "v1"));
     }
 }
