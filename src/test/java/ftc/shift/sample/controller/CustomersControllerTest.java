@@ -21,9 +21,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,7 +82,7 @@ class CustomersControllerTest {
     void updateCustomer() throws Exception {
         when(customerFacade.updateCustomer(any(CustomerDtoRequest.class), eq(1L))).thenReturn(customerDtoResponse);
 
-        mockMvc.perform(post(USERS_PATH + "/1")
+        mockMvc.perform(put(USERS_PATH + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerDtoRequest))
                 .accept(MediaType.APPLICATION_JSON))
