@@ -42,3 +42,26 @@ insert into customers( type, name, registration_date) values
     ('user', 'Vitya', '2020-01-20'),
     ('company', 'NSU', '2019-08-01') ;
 
+create table expiring
+(
+id bigserial not null,
+licence_id uuid not null,
+user_id bigint not null
+);
+
+INSERT INTO licences (id, create_date, end_date, private_key, customer_id, type, number_of_licences, licence_key)
+VALUES ('c2d29867-3d0b-d497-9191-18a9d8ee7830' , '2021-03-12', '2021-03-14', 'TEST', 1, 'TEST', 1, 'TEST');
+
+create or replace procedure licence_to_expire()
+language plpgsql
+as $$
+begin
+  delete from expiring;
+
+  insert into expiring (id, licence_id, user_id)
+  select nextval('expiring_id_seq') as uuid, id as licenсe_id, customer_id
+  from licences
+  where current_date < end_date
+  and  date_part('day', age(end_date, current_date)) < 7;
+
+end;$$
