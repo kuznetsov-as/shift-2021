@@ -178,7 +178,6 @@ public class LicenceUtil {
     //Подразумевается что пользователь утилиты должет логировать экспешены
 
     public static PublicLicence getLicenseFromString(String licenseString) throws LicenceDecodeException {
-        
         try {
             var encodedLicense = removeMarksFromKey(new String(Base64.getDecoder().decode(licenseString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
             return gson.fromJson(encodedLicense, PublicLicence.class);
