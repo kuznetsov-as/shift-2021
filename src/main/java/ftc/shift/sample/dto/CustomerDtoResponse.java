@@ -24,5 +24,4 @@ public class CustomerDtoResponse {
 
     @ApiModelProperty(value = "Emails", example = "i.ivanov@gmail.com")
     private List<String> emails;
-
 }

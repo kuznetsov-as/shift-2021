@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import static ftc.shift.sample.util.Constants.LICENCE_TYPE_ORDINARY;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,17 +43,27 @@ class LicencesControllerTest {
     private LicenceFacade licenceFacade;
 
     @Test
-    void createLicence() throws Exception {
-        Long userId = 1L;
-        String licenceString = LicenceUtil.generateLicenseString(LicenceUtil.generateLicence(userId, 100L));
-        when(licenceFacade.createLicence(userId)).thenReturn(licenceString);
+    void createLicenceForUser() throws Exception {
+        Long id = 1L;
+        String type = LICENCE_TYPE_ORDINARY;
+
+        Licence licence = LicenceUtil.generateLicence(id, 100L);
+        licence.setType(type);
+        licence.setNumberOfLicences((long) 1);
+
+        String licenceString = LicenceUtil.generateLicenseString(licence);
+
+        when(licenceFacade.createLicence(id, type, 1)).thenReturn(licenceString);
 
         mockMvc.perform(post(CREATE_LICENCE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(userId))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(licenceString));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(String.valueOf(id))
+            .param("type", type)
+            .param("numberOfProducts", String.valueOf(1))
+            .param("count", String.valueOf(0))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(licenceString));
     }
 
     @Test
@@ -65,11 +76,11 @@ class LicencesControllerTest {
         when(licenceFacade.getLicence(licenceId, id)).thenReturn(licenceString);
 
         mockMvc.perform(post(GET_LICENCE_URL + licenceId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(id))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string(licenceString));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(String.valueOf(id))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(licenceString));
     }
 
     @Test
@@ -84,11 +95,11 @@ class LicencesControllerTest {
         when(licenceFacade.getAllCompanyLicencesId(userId)).thenReturn(uuidList);
 
         mockMvc.perform(post(GET_ALL_COMPANY_LICENCES_ID_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(userId))
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(String.valueOf(userId))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
     }
 
     @Test
@@ -100,11 +111,11 @@ class LicencesControllerTest {
         when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(licenceString)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("OK"));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(licenceString)
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string("OK"));
     }
 
     @Test
@@ -116,10 +127,10 @@ class LicencesControllerTest {
         when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("BAD LICENCE")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(418))
-                .andExpect(content().string(LICENCE_NOT_EXIST));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("BAD LICENCE")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().is(418))
+            .andExpect(content().string(LICENCE_NOT_EXIST));
     }
 }

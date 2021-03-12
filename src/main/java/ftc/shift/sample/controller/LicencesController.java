@@ -29,18 +29,28 @@ public class LicencesController {
     /**
      * Добавление новой лицензии
      *
-     * @param id - id пользователя или компании, для новой лицензии
+     * @param id               - id пользователя или компании, для новой лицензии
+     * @param type             - тип создаваемой лицензии
+     * @param numberOfProducts - количество продуктов покрываемых мультилицензией
+     * @param count            - количесвто создаваемых лицензий
      * @return Сохранённую лицензию
      */
     @PostMapping(LICENCES_PATH + "/new")
-    public ResponseEntity<String> createLicence(@RequestBody Long id) {
+    public ResponseEntity<?> createLicence(@RequestBody Long id, @RequestParam String type, @RequestParam Integer numberOfProducts, @RequestParam Integer count) {
         try {
-            String result = licenceFacade.createLicence(id);
-            return ResponseEntity.ok(result);
-        } catch (LicenceGeneratorException exception) {
-            return ResponseEntity.status(418).body("LICENCE_GENERATION_ERROR");
+            if (count > 1) {
+                List<String> result = licenceFacade.createManyLicences(id, count);
+                return ResponseEntity.ok(result);
+            } else {
+                String result = licenceFacade.createLicence(id, type, numberOfProducts);
+                return ResponseEntity.ok(result);
+            }
+            } catch (LicenceGeneratorException exception) {
+                return ResponseEntity.status(418).body(LICENCE_GENERATION_ERROR);
+            } catch (BadRequestException | DataNotFoundException exception) {
+                return ResponseEntity.badRequest().body(exception.getMessage());
+            }
         }
-    }
 
     /**
      * Получение существующей лицензии
