@@ -36,13 +36,18 @@ public class LicencesController {
      * @return Сохранённую лицензию
      */
     @PostMapping(LICENCES_PATH + "/new")
-    public ResponseEntity<?> createLicence(@RequestBody Long id, @RequestParam String type, @RequestParam Integer numberOfProducts, @RequestParam Integer count) {
+    public ResponseEntity<?> createLicence(@RequestBody Long id,
+                                           @RequestParam String type,
+                                           @RequestParam Integer numberOfProducts,
+                                           @RequestParam Integer count,
+                                           @RequestParam String productType,
+                                           @RequestParam String productVersion) {
         try {
             if (count > 1) {
-                List<String> result = licenceFacade.createManyLicences(id, count);
+                List<String> result = licenceFacade.createManyLicences(id, count, productType, productVersion);
                 return ResponseEntity.ok(result);
             } else {
-                String result = licenceFacade.createLicence(id, type, numberOfProducts);
+                String result = licenceFacade.createLicence(id, type, numberOfProducts, productType, productVersion);
                 return ResponseEntity.ok(result);
             }
             } catch (LicenceGeneratorException exception) {
@@ -96,9 +101,11 @@ public class LicencesController {
      * иначе код 418 с типом ошибки в теле ответа: LICENSE_NOT_EXIST, LICENSE_EXPIRED
      */
     @PostMapping(LICENCES_PATH + "/check")
-    public ResponseEntity<String> checkLicence(@RequestBody String licenceString) {
+    public ResponseEntity<String> checkLicence(@RequestBody String licenceString,
+                                               @RequestParam String productType,
+                                               @RequestParam String productVersion) {
         try {
-            if (licenceFacade.isLicenceCorrect(licenceString)) {
+            if (licenceFacade.isLicenceCorrect(licenceString, productType, productVersion)) {
                 return ResponseEntity.ok("OK");
             } else {
                 return ResponseEntity.status(418).body(LICENCE_NOT_EXIST);

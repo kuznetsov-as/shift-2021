@@ -1,8 +1,6 @@
 package ftc.shift.sample.dto;
 
-import ftc.shift.sample.entity.Customer;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,5 +31,11 @@ public class LicenceDtoResponse {
 
     @ApiModelProperty(value = "Количество копий лицензии", example = "12")
     private Long numberOfLicences;
+
+    @ApiModelProperty(value = "Тип продукта", example = "Visual Studio")
+    private String productType;
+
+    @ApiModelProperty(value = "Версия продукта", example = "1.0.2")
+    private String productVersion;
 }
 

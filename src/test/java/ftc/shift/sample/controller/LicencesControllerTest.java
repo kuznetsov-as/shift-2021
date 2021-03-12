@@ -47,40 +47,42 @@ class LicencesControllerTest {
         Long id = 1L;
         String type = LICENCE_TYPE_ORDINARY;
 
-        Licence licence = LicenceUtil.generateLicence(id, 100L);
+        Licence licence = LicenceUtil.generateLicence(id, 100L, "1", "1");
         licence.setType(type);
         licence.setNumberOfLicences((long) 1);
 
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.createLicence(id, type, 1)).thenReturn(licenceString);
+        when(licenceFacade.createLicence(id, type, 1, "1", "1")).thenReturn(licenceString);
 
         mockMvc.perform(post(CREATE_LICENCE_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(id))
-            .param("type", type)
-            .param("numberOfProducts", String.valueOf(1))
-            .param("count", String.valueOf(0))
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(licenceString));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(id))
+                .param("type", type)
+                .param("numberOfProducts", String.valueOf(1))
+                .param("count", String.valueOf(0))
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(licenceString));
     }
 
     @Test
     void getLicence() throws Exception {
         Long id = 1L;
-        Licence licence = LicenceUtil.generateLicence(id, 100L);
+        Licence licence = LicenceUtil.generateLicence(id, 100L, "1", "1");
         UUID licenceId = licence.getId();
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
         when(licenceFacade.getLicence(licenceId, id)).thenReturn(licenceString);
 
         mockMvc.perform(post(GET_LICENCE_URL + licenceId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(id))
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string(licenceString));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(id))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(licenceString));
     }
 
     @Test
@@ -95,42 +97,46 @@ class LicencesControllerTest {
         when(licenceFacade.getAllCompanyLicencesId(userId)).thenReturn(uuidList);
 
         mockMvc.perform(post(GET_ALL_COMPANY_LICENCES_ID_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(String.valueOf(userId))
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(String.valueOf(userId))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(uuidList)));
     }
 
     @Test
     void checkLicence() throws Exception {
         Long userId = 1L;
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        Licence licence = LicenceUtil.generateLicence(userId, 100L, "1", "1");
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
+        when(licenceFacade.isLicenceCorrect(licenceString, "1", "1")).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(licenceString)
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().string("OK"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(licenceString)
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("OK"));
     }
 
     @Test
     void checkLicenceIfNotExist() throws Exception {
         Long userId = 1L;
-        Licence licence = LicenceUtil.generateLicence(userId, 100L);
+        Licence licence = LicenceUtil.generateLicence(userId, 100L, "1", "1");
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.isLicenceCorrect(licenceString)).thenReturn(true);
+        when(licenceFacade.isLicenceCorrect(licenceString, "1", "1")).thenReturn(true);
 
         mockMvc.perform(post(CHECK_LICENCE)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("BAD LICENCE")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is(418))
-            .andExpect(content().string(LICENCE_NOT_EXIST));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("BAD LICENCE")
+                .param("productType", "1")
+                .param("productVersion", "1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(418))
+                .andExpect(content().string(LICENCE_NOT_EXIST));
     }
 }

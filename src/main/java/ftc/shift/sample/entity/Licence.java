@@ -59,4 +59,12 @@ public class Licence {
     @Nullable
     @Expose
     private Long numberOfLicences;
+
+    @Nullable
+    @Expose
+    private String productType;
+
+    @Nullable
+    @Expose
+    private String productVersion;
 }

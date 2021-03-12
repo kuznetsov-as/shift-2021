@@ -21,7 +21,9 @@ constraint fk_40
 references customers,
 type varchar(255) not null,
 number_of_licences bigint,
-licence_key varchar(8000)
+licence_key varchar(8000),
+product_type varchar(255),
+product_version varchar(255)
 );
 
 create table contacts
