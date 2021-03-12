@@ -25,9 +25,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.LinkedList;
 import java.util.UUID;
 
 public class LicenceUtil {
@@ -58,7 +56,7 @@ public class LicenceUtil {
         return builder.toString();
     }
 
-    private static String removeMarksFromKey(String key){
+    private static String removeMarksFromKey(String key) {
         StringBuilder builder = new StringBuilder(key);
         for (int i = 1; i <= key.length() / 6; i++)
             builder.delete(i * 6 - i, i * 6 - i + 1);
@@ -66,9 +64,9 @@ public class LicenceUtil {
         return builder.toString();
     }
 
-    private static boolean checkMarks(String key){
+    private static boolean checkMarks(String key) {
         for (int i = 1; i <= key.length() / 6; i++)
-            if(key.charAt(i * 6 - 1) != (char) (key.charAt((i - 1) * 6) + 1))
+            if (key.charAt(i * 6 - 1) != (char) (key.charAt((i - 1) * 6) + 1))
                 return false;
         return true;
     }
@@ -178,8 +176,9 @@ public class LicenceUtil {
     //Подразумевается что пользователь утилиты должет логировать экспешены
 
     public static PublicLicence getLicenseFromString(String licenseString) throws LicenceDecodeException {
+        var clearedLicence = removeMarksFromKey(licenseString);
         try {
-            var encodedLicense = removeMarksFromKey(new String(Base64.getDecoder().decode(licenseString.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
+            var encodedLicense = new String(Base64.getDecoder().decode(clearedLicence.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             return gson.fromJson(encodedLicense, PublicLicence.class);
         } catch (JsonSyntaxException | IllegalArgumentException e) {
             throw new LicenceDecodeException("Wrong licence string", e);
