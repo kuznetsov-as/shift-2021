@@ -30,17 +30,17 @@ public class LicenceFacade {
         this.customerService = customerService;
     }
 
-    public String createLicence(Long userId, String type, Integer numberOfProducts) throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
+    public String createLicence(Long userId, String type, Integer numberOfProducts, String productType, String productVersion) throws LicenceGeneratorException, BadRequestException, DataNotFoundException {
         Customer customer = customerService.getCustomer(userId);
         Licence licence;
 
         if (Constants.CUSTOMER_TYPE_USER.equals(customer.getType()) && LICENCE_TYPE_ORDINARY.equals(type)) {
-            licence = LicenceUtil.generateLicence(userId, 100L);
+            licence = LicenceUtil.generateLicence(userId, 100L, productType, productVersion);
             licence.setType(LICENCE_TYPE_ORDINARY);
             licence.setNumberOfLicences((long) 1);
 
         } else if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
-            licence = LicenceUtil.generateLicence(userId, 100L);
+            licence = LicenceUtil.generateLicence(userId, 100L, productType, productVersion);
             licence.setType(type);
             licence.setNumberOfLicences((long) (LICENCE_TYPE_MULTI.equals(type) ? numberOfProducts : 1));
 
@@ -51,13 +51,13 @@ public class LicenceFacade {
         return LicenceUtil.generateLicenseString(licenceService.createLicence(licence));
     }
 
-    public List<String> createManyLicences(Long userId, Integer count) throws DataNotFoundException, LicenceGeneratorException, BadRequestException {
+    public List<String> createManyLicences(Long userId, Integer count, String productType, String productVersion) throws DataNotFoundException, LicenceGeneratorException, BadRequestException {
         List<String> licences = new ArrayList<>();
 
         Customer customer = customerService.getCustomer(userId);
         if (Constants.CUSTOMER_TYPE_COMPANY.equals(customer.getType())) {
             for (int i = 0; i < count; i++) {
-                Licence licence = LicenceUtil.generateLicence(userId, 100L);
+                Licence licence = LicenceUtil.generateLicence(userId, 100L, productType, productVersion);
                 licence.setType(LICENCE_TYPE_ORDINARY);
                 licence.setNumberOfLicences((long) 1);
                 String licenceString = LicenceUtil.generateLicenseString(licenceService.createLicence(licence));

@@ -47,13 +47,13 @@ class LicencesControllerTest {
         Long id = 1L;
         String type = LICENCE_TYPE_ORDINARY;
 
-        Licence licence = LicenceUtil.generateLicence(id, 100L);
+        Licence licence = LicenceUtil.generateLicence(id, 100L, "1", "1");
         licence.setType(type);
         licence.setNumberOfLicences((long) 1);
 
         String licenceString = LicenceUtil.generateLicenseString(licence);
 
-        when(licenceFacade.createLicence(id, type, 1)).thenReturn(licenceString);
+        when(licenceFacade.createLicence(id, type, 1, "1", "1")).thenReturn(licenceString);
 
         mockMvc.perform(post(CREATE_LICENCE_URL)
             .contentType(MediaType.APPLICATION_JSON)
@@ -61,6 +61,8 @@ class LicencesControllerTest {
             .param("type", type)
             .param("numberOfProducts", String.valueOf(1))
             .param("count", String.valueOf(0))
+            .param("productType", "1")
+            .param("productVersion", "1")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string(licenceString));
@@ -113,6 +115,8 @@ class LicencesControllerTest {
         mockMvc.perform(post(CHECK_LICENCE)
             .contentType(MediaType.APPLICATION_JSON)
             .content(licenceString)
+            .param("productType", "1")
+            .param("productVersion", "1")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string("OK"));
@@ -129,6 +133,8 @@ class LicencesControllerTest {
         mockMvc.perform(post(CHECK_LICENCE)
             .contentType(MediaType.APPLICATION_JSON)
             .content("BAD LICENCE")
+            .param("productType", "1")
+            .param("productVersion", "1")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().is(418))
             .andExpect(content().string(LICENCE_NOT_EXIST));
