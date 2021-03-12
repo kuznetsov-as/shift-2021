@@ -1,7 +1,6 @@
 package ftc.shift.sample.repository;
 
 import ftc.shift.sample.entity.Customer;
-import ftc.shift.sample.entity.Licence;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -11,5 +10,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Licence> {
+public interface CustomerRepository extends JpaRepository<Customer, Long>, JpaSpecificationExecutor<Customer> {
 }
